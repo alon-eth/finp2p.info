@@ -17,7 +17,7 @@ figure svg{display:block;width:100%;height:auto;min-width:640px;color:var(--ink)
 figure svg text{fill:currentColor}figure svg text[fill="#7d8784"]{fill:var(--muted)}figure svg text[fill="#0C8F57"]{fill:var(--accent)}
 figcaption{font-size:13.5px;color:var(--muted);margin-top:12px;max-width:80ch;line-height:1.5}
 figcaption b{color:var(--ink);font-weight:600}
-table{border-collapse:collapse;width:100%;font-size:14px;margin-top:16px}
+.tblwrap{overflow-x:auto;margin-top:16px}table{border-collapse:collapse;width:100%;font-size:14px;min-width:520px}
 th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
 th{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:600}
 td:first-child{white-space:nowrap;font-family:var(--mono);font-size:12.5px}
@@ -167,7 +167,7 @@ td:first-child{white-space:nowrap;font-family:var(--mono);font-size:12.5px}
 
 <h2>3. What the Router works with</h2>
 <p>Four identities and three primitives cover everything. Developers mostly create profiles, submit intents and watch plans; they rarely touch orchestration plans directly.</p>
-<table>
+<div class="tblwrap"><table>
 <tr><th>Thing</th><th>What it is</th><th>Example</th></tr>
 <tr><td>Router identity</td><td>An organization on the network. Cryptographically anchored; other Routers trust it through the registry.</td><td>bank-us</td></tr>
 <tr><td>Investor identity</td><td>A client profile with one or more FinIDs (public keys) across custodians, plus KYC and accreditation certificates.</td><td>bank-us:101:&lt;uuid&gt;</td></tr>
@@ -176,7 +176,7 @@ td:first-child{white-space:nowrap;font-family:var(--mono);font-size:12.5px}
 <tr><td>Intent</td><td>A business action with a schema: primary sale, secondary buy or sell, transfer, redemption, repo loan.</td><td>bank-us:105:&lt;uuid&gt;</td></tr>
 <tr><td>Orchestration plan</td><td>The distributed workflow the Router generates from an intent and runs across participants.</td><td>bank-us:106:&lt;uuid&gt;</td></tr>
 <tr><td>Adapter</td><td>Code the institution runs beside its Router: ledger, custody, payment or data. Speaks a fixed API; the Router never sees the ledger directly.</td><td>EVM adapter, our LunarCrush data adapter</td></tr>
-</table>
+</table></div>
 
 <h2>4. Example: where our data utility plugs in</h2>
 <p>A data provider is just another adapter, on the provider's side rather than the consumer's. It answers pull and subscribe requests and pushes items into a Router's ingest endpoint. That Router can then re-share the feed to peers under an access list, so one adapter serves the whole network.</p>

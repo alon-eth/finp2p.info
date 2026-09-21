@@ -41,7 +41,18 @@ p{max-width:68ch;color:var(--muted);margin:10px 0}p strong,li strong{color:var(-
 .cards{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));margin-top:22px}
 .card{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:20px;text-decoration:none;color:inherit;display:block}.card:hover{border-color:var(--accent)}.card p{margin:6px 0 0;font-size:14px}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:26px 0}.stat{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:14px 16px}.stat b{display:block;font:500 30px/1.1 var(--serif)}.stat span{font-size:12.5px;color:var(--muted)}
-.tbl{overflow-x:auto;background:var(--paper);border:1px solid var(--line);border-radius:8px}table{border-collapse:collapse;width:100%;font-size:13.5px}th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+.tbl{overflow-x:auto;background:var(--paper);border:1px solid var(--line);border-radius:8px}
+@media (max-width:720px){
+ .tbl.stack{overflow:visible;background:transparent;border:0;border-radius:0}
+ .tbl.stack table{width:100%;border-collapse:separate;border-spacing:0 10px}
+ .tbl.stack colgroup,.tbl.stack thead{display:none}
+ .tbl.stack tr{display:block;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+ .tbl.stack td{display:block;border:0;padding:3px 0;max-width:none}
+ .tbl.stack td:empty{display:none}
+ .tbl.stack td[data-th]::before{content:attr(data-th);display:block;font:600 10px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:2px}
+ .tbl.stack td:first-child{font-size:15px;padding-bottom:6px}
+ .tbl.stack td:first-child::before{display:none}
+}table{border-collapse:collapse;width:100%;font-size:13.5px}th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
 .pill{display:inline-block;padding:2px 8px;border-radius:999px;font:500 11px var(--mono);border:1px solid var(--line);color:var(--muted);margin:2px 4px 2px 0}.pill.prod{border-color:var(--accent);color:var(--accent)}.pill.prop{border-color:var(--warm);color:var(--warm)}
 .ref{display:inline-block;font:500 10.5px var(--mono);color:var(--accent);border:1px solid var(--line);border-radius:4px;padding:1px 5px;margin:2px 3px 0 0;text-decoration:none}.ref.int{color:#C0504D;border-style:dashed}
 .note{border-left:3px solid var(--warm);background:var(--warm-soft);padding:12px 14px;border-radius:6px;font-size:14px;color:var(--muted);margin:18px 0}
@@ -152,7 +163,7 @@ home=f"""<main class="page">
 <p><strong>Live:</strong> intraday repo between J.P. Morgan and HQLAx, in production since 2025, with up to $1 billion traded in a day. <strong>Coming:</strong> Goldman Sachs, Apex, Archax and DTCC on repo and collateral upgrades, per Ownera's Open Collateral Network site; live pilots this month, full production Q4 2026. <strong>Proven in sandbox:</strong> tokenized money market funds as collateral across 48 firms in the US and 30 in the UK and EU, with BlackRock, Citi, Fidelity, Franklin Templeton, State Street, UBS and others in the contributor lists.</p>
 <p><a class="btn primary" href="/map/">Open the map</a> <a class="btn" href="/sources/">See the sources</a></p>
 <h2>Building for the network?</h2>
-<p>If you are building a SuperApp, planning a company for the network, or run an institution on it, <a href="/build/">tell us what you are working on</a>. Draper Goren Blockchain co-founds and backs the companies that make tokenized markets work, and we built one of these SuperApps ourselves.</p>
+<p>If you are building a SuperApp, planning a company for the network, or run an institution on it, <a href="/build/">tell us what you are working on</a>. Draper Goren Blockchain co-founds and backs the companies that make tokenized markets work, and we are building one of these SuperApps ourselves.</p>
 </main>"""
 write('/',chrome('/','FinP2P.info: the FinP2P network, mapped','An independent, sourced map of Ownera\'s FinP2P network: every SuperApp, every named institution, how a transaction moves, and a public source for each claim.',home))
 # ---------- how it works
@@ -168,6 +179,14 @@ for k in ('nodes','edges','overlay','institutions','instEdges','sources'):
     if k in PUBLIC: MG[k]=PUBLIC[k]
 body=body[:m.start(1)]+json.dumps(MG).replace('</script','<\\/script')+body[m.end(1):]
 body=body.replace('All <strong>35 SuperApps</strong>',f'All <strong>{len(APPS)} SuperApps</strong>')
+# /institutions/ and /sources/ own those two tables; the map links to them instead of rendering them again
+i,j=body.find('<div id="dupTables">'),body.find('<h2 class="rules">')
+assert i>0 and j>i, 'dupTables markers missing from map.body.html'
+body=body[:i]+f'''<h2>The institutions, and the evidence</h2>
+<p>Every organisation on this map is listed with its citation on the <a href="/institutions/">institutions page</a>, and every document behind those citations is on the <a href="/sources/">sources page</a>. Click a node above for the same detail in place.</p>
+<div class="cards" style="margin-bottom:26px"><a class="card" href="/institutions/"><h3>{len(insts)} institutions</h3><p>Banks, market infrastructures, asset managers and technology partners, filterable by kind and by source.</p></a><a class="card" href="/sources/"><h3>{len(PUBLIC['sources'])} sources</h3><p>Every cited document once, with the institutions and apps that rely on it.</p></a></div>
+'''+body[j:]
+
 write('/map/',chrome('/map/','FinP2P SuperApp map','Interactive map of every SuperApp on Ownera\'s store, their derived connections, and the institutions attached to each, with sources.',body,extra_head=head,wide=True))
 # ---------- apps
 rows=[]
@@ -176,10 +195,10 @@ for a in sorted(APPS,key=lambda a:(a['status']!='production',a['status']!='sandb
     st=a['status']; pill=f'<span class="pill{" prod" if st=="production" else ""}">{st}</span>'
     orch=(a.get("orchestration") or a.get("shortDescription") or "").strip()
     if len(orch)>260: orch=orch[:260].rsplit(' ',1)[0].rstrip(' ,;:.')+'…'
-    rows.append(f'<tr id="{a["slug"]}"><td><b>{html.escape(a["name"])}</b><br><span style="color:var(--muted);font-size:12.5px">{html.escape(a.get("companyName") or "")}</span></td><td>{pill}</td><td>{"".join(f"<span class=pill>{html.escape(c)}</span>" for c in pc)}</td><td>{html.escape(orch)}</td><td class="serves">{html.escape(", ".join(pt))}</td><td><a href="https://superapps.ownera.io/app/{a["slug"]}" target="_blank" rel="noopener">listing&nbsp;↗</a></td></tr>')
-APPS_CSS='<style>table.apps{table-layout:fixed}table.apps td.serves{font-size:12.5px;color:var(--muted)}@media (max-width:900px){table.apps{table-layout:auto;min-width:880px}}</style>'
+    rows.append(f'<tr id="{a["slug"]}"><td><b>{html.escape(a["name"])}</b><br><span style="color:var(--muted);font-size:12.5px">{html.escape(a.get("companyName") or "")}</span></td><td data-th="Status">{pill}</td><td data-th="Category">{"".join(f"<span class=pill>{html.escape(c)}</span>" for c in pc)}</td><td data-th="What it orchestrates">{html.escape(orch)}</td><td class="serves" data-th="Serves">{html.escape(", ".join(pt))}</td><td><a href="https://superapps.ownera.io/app/{a["slug"]}" target="_blank" rel="noopener">listing&nbsp;↗</a></td></tr>')
+APPS_CSS='<style>table.apps{table-layout:fixed}table.apps td.serves{font-size:12.5px;color:var(--muted)}@media (min-width:721px) and (max-width:900px){table.apps{table-layout:auto;min-width:880px}}</style>'
 apps_page=f"""<main class="page wide"><div class="eyebrow">Catalog</div><h1>Every SuperApp on the store</h1><p class="lede">{len(APPS)} apps from {companies} companies: {prod} in production, {sand} in sandbox, {dev} in development. Pulled from the store's public API on {DATA_DATE}. Our proposed <a href="https://www.alongoren.com/superapp/">Social and Market Data SuperApp</a> is not yet listed and is not counted here.</p>
-<div class="tbl"><table class="apps"><colgroup><col style="width:16%"><col style="width:8%"><col style="width:17%"><col style="width:32%"><col style="width:20%"><col style="width:7%"></colgroup><thead><tr><th>App</th><th>Status</th><th>Category</th><th>What it orchestrates</th><th>Serves</th><th></th></tr></thead><tbody>{''.join(rows)}</tbody></table></div>{APPS_CSS}</main>"""
+<div class="tbl stack"><table class="apps"><colgroup><col style="width:16%"><col style="width:8%"><col style="width:17%"><col style="width:32%"><col style="width:20%"><col style="width:7%"></colgroup><thead><tr><th>App</th><th>Status</th><th>Category</th><th>What it orchestrates</th><th>Serves</th><th></th></tr></thead><tbody>{''.join(rows)}</tbody></table></div>{APPS_CSS}</main>"""
 write('/apps/',chrome('/apps/','FinP2P SuperApp catalog',f'All {len(APPS)} SuperApps on Ownera\'s store with status, company, category, orchestration and participant types.',apps_page,wide=True))
 # ---------- institutions
 KIND={'bank':'Bank','asset manager':'Asset manager','market infrastructure':'Market infrastructure','custody tech':'Custody tech','stablecoin / payments':'Stablecoin / payments','data':'Data','technology':'Technology','fund services':'Fund services','real estate':'Real estate'}
@@ -188,20 +207,27 @@ irows=[]
 for i in sorted(insts,key=lambda i:(i['kind'],i['name'])):
     ls=[e for e in iedges if e['inst']==i['name']]
     cls='internal' if not i.get('public') else ('store' if i['refs']==['store'] else 'public')
-    irows.append(f'<tr data-kind="{html.escape(i["kind"])}" data-src="{cls}"><td><b>{html.escape(i["name"])}</b>{"" if i.get("public") else " <span class=\"pill\" style=\"border-color:#C0504D;color:#C0504D\">unconfirmed</span>"}</td><td>{KIND.get(i["kind"],i["kind"])}</td><td style="font-size:12.5px">{html.escape(", ".join(name_by_slug.get(e["app"],e["app"]) for e in ls))}</td><td>{refs(i["refs"])}</td></tr>')
+    irows.append(f'<tr data-kind="{html.escape(i["kind"])}" data-src="{cls}"><td><b>{html.escape(i["name"])}</b>{"" if i.get("public") else " <span class=\"pill\" style=\"border-color:#C0504D;color:#C0504D\">unconfirmed</span>"}</td><td data-th="Kind">{KIND.get(i["kind"],i["kind"])}</td><td data-th="Attached to" style="font-size:12.5px">{html.escape(", ".join(name_by_slug.get(e["app"],e["app"]) for e in ls))}</td><td data-th="Sources">{refs(i["refs"])}</td></tr>')
 inst_page=f"""<main class="page wide"><div class="eyebrow">Directory</div><h1>Banks, institutions and partners on FinP2P</h1><p class="lede">{len(insts)} organisations attached to at least one SuperApp, every one with a public source. Most trace to a few documents: the two GDF and ISDA collateral sandbox reports, the J.P. Morgan and HQLAx repo launch, DTCC's own account of its collateral experiment, CoinDesk on the Goldman real estate fund, Ownera's announcements and its Open Collateral Network site, and vendor partner pages.</p>
 <div class="note">A name on this list means the organisation is publicly connected to an app or to the network in the cited document. It does not mean it transacts on FinP2P in production. Some SuperApps store "partners" are the app vendor's own clients. Read the citation.</div>
 <div class="toolbar"><select id="fk"><option value="">All kinds</option>{''.join(f'<option value="{k}">{v}</option>' for k,v in KIND.items())}</select><select id="fs"><option value="">Any source</option><option value="public">Public source</option><option value="store">SuperApps store listing only</option></select><input type="search" id="fq" placeholder="Find an institution"></div>
-<div class="tbl"><table id="it"><thead><tr><th>Institution</th><th>Kind</th><th>Attached to</th><th>Sources</th></tr></thead><tbody>{''.join(irows)}</tbody></table></div>
+<div class="tbl stack"><table id="it"><thead><tr><th>Institution</th><th>Kind</th><th>Attached to</th><th>Sources</th></tr></thead><tbody>{''.join(irows)}</tbody></table></div>
 <script>(function(){{var k=document.getElementById('fk'),s=document.getElementById('fs'),q=document.getElementById('fq');function f(){{var t=q.value.toLowerCase();document.querySelectorAll('#it tbody tr').forEach(function(r){{r.style.display=((!k.value||r.dataset.kind===k.value)&&(!s.value||r.dataset.src===s.value)&&(!t||r.textContent.toLowerCase().indexOf(t)>=0))?'':'none'}})}}[k,s].forEach(function(e){{e.addEventListener('change',f)}});q.addEventListener('input',f)}})();</script></main>"""
 write('/institutions/',chrome('/institutions/','Institutions on FinP2P','Every bank, market infrastructure, asset manager and technology partner publicly attached to a FinP2P SuperApp, with sources.',inst_page,wide=True))
 # ---------- sources
 cnt={}
 for i in insts:
     for r in i['refs']: cnt.setdefault(r,[]).append(i['name'])
-srows=''.join(f'<tr><td>{f"<a href=\"{s["url"]}\" target=\"_blank\" rel=\"noopener\">{html.escape(s["title"])}</a>" if s["url"] else html.escape(s["title"])}</td><td style="white-space:nowrap;color:var(--muted);font-size:12.5px">{html.escape(s["pub"])}<br>{s["date"]}</td><td style="font-size:12.5px">{len(cnt[r])}: {html.escape(", ".join(cnt[r]))}</td></tr>' for r,s in sorted(SOURCES.items(),key=lambda kv:-len(cnt.get(kv[0],[]))) if cnt.get(r))
-src_page=f"""<main class="page wide"><div class="eyebrow">Evidence</div><h1>Sources</h1><p class="lede">Every document cited on this site, once, with the institutions that rely on it. Dates are the document's own. Ownera's <a href="https://www.ownera.io/news">news page</a> indexes its partnership announcements; the <a href="https://ocn.ownera.io/">Open Collateral Network</a> site hosts the full industry reports.</p>
-<div class="tbl"><table><thead><tr><th>Source</th><th>Publisher · date</th><th>Cited by</th></tr></thead><tbody>{srows}</tbody></table></div>
+for e in iedges:
+    for r in e.get('refs') or []: cnt.setdefault(r,[]).append(byname[e['inst']]['name'] if e['inst'] in byname else e['inst'])
+for n in nodes:
+    for r in n.get('refs') or []: cnt.setdefault(r,[]).append(n['name'])
+for r in cnt: cnt[r]=sorted(dict.fromkeys(cnt[r]))
+missing=[r for r in PUBLIC['sources'] if not cnt.get(r)]
+assert not missing, f'sources cited by nothing: {missing}'
+srows=''.join(f'<tr><td data-th="Source">{f"<a href=\"{s["url"]}\" target=\"_blank\" rel=\"noopener\">{html.escape(s["title"])}</a>" if s["url"] else html.escape(s["title"])}</td><td data-th="Publisher" style="white-space:nowrap;color:var(--muted);font-size:12.5px">{html.escape(s["pub"])}<br>{s["date"]}</td><td data-th="Cited by" style="font-size:12.5px">{len(cnt[r])}: {html.escape(", ".join(cnt[r]))}</td></tr>' for r,s in sorted(PUBLIC['sources'].items(),key=lambda kv:-len(cnt.get(kv[0],[]))))
+src_page=f"""<main class="page wide"><div class="eyebrow">Evidence</div><h1>Sources</h1><p class="lede">All {len(PUBLIC['sources'])} documents behind this site, each listed once, with the institutions and apps that rely on it. Dates are the document's own. Ownera's <a href="https://www.ownera.io/news">news page</a> indexes its partnership announcements; the <a href="https://ocn.ownera.io/">Open Collateral Network</a> site hosts the full industry reports.</p>
+<div class="tbl stack"><table><thead><tr><th>Source</th><th>Publisher · date</th><th>Cited by</th></tr></thead><tbody>{srows}</tbody></table></div>
 <h2>Use the data</h2><p>The whole model behind this site is one file: <a href="/data/graph.json">graph.json</a> (apps, derived connections with their reasons, institutions with references, and every source). It is published under <a href="https://creativecommons.org/licenses/by/4.0/" rel="license">CC BY 4.0</a>, so you may reuse it anywhere with attribution to finp2p.info. Records we cannot tie to a public document are not in it.</p>
 <h2>How the app-to-app connections were derived</h2><p>Ownera does not publish app-to-app links. The map derives them from each app's category, participant types and stated orchestration using ten explicit rules, listed at the bottom of the <a href="/map/">map page</a>. They are our reading of the listings, not an Ownera statement.</p></main>"""
 write('/sources/',chrome('/sources/','Sources','Every public document behind finp2p.info, with the institutions that cite it.',src_page,wide=True))
@@ -266,7 +292,7 @@ write('/network/',chrome('/network/','The FinP2P network, every connected piece'
 # ---------- build with us (DGB + contact)
 CF_STYLE='<style>#cf input,#cf select,#cf textarea{background:var(--ground);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:9px 10px;font:14px var(--sans)}#cf input:focus,#cf select:focus,#cf textarea:focus{outline:none;border-color:var(--accent)}</style>'
 build_page=f"""<main class="page"><div class="eyebrow">Build with us</div><h1>Building a SuperApp, or building for the network? Talk to us.</h1>
-<p class="lede">This site is maintained by the <a href="https://dgb.vc">Draper Goren Blockchain</a> venture studio. We built the <a href="https://www.alongoren.com/superapp/">Social and Market Data SuperApp</a> for the network ourselves, our founding partner Alon Goren is on the board of Ownera, and we back and build the companies that make tokenized markets work. If you are working on anything that touches FinP2P, we want to hear from you.</p>
+<p class="lede">This site is maintained by the <a href="https://dgb.vc">Draper Goren Blockchain</a> venture studio. We are building the <a href="https://www.alongoren.com/superapp/">Social and Market Data SuperApp</a> for the network ourselves, our founding partner Alon Goren is on the board of Ownera, and we back and build the companies that make tokenized markets work. If you are working on anything that touches FinP2P, we want to hear from you.</p>
 <div class="cards">
 <div class="card"><h3>You are building a SuperApp</h3><p>Listed or not yet. We can share what we learned shipping a data utility end to end: the adapter contract, the schema process, the ingest test, the Docker template. And we will put you on the map.</p></div>
 <div class="card"><h3>You are a founder planning to build for the network</h3><p>Issuer tools, data, identity, custody, connectors, a vertical business app. DGB is a venture studio: when the company does not exist yet, we co-found it; when it does, we want to be the earliest check.</p></div>
@@ -286,7 +312,7 @@ build_page=f"""<main class="page"><div class="eyebrow">Build with us</div><h1>Bu
  <label style="font-size:13px;color:var(--muted);display:block;margin-top:12px">What are you working on?<br><textarea id="c-msg" name="message" rows="5" style="width:100%;margin-top:4px"></textarea></label>
  <input type="text" name="website" id="c-web" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
  <div style="display:flex;gap:12px;align-items:center;margin-top:14px;flex-wrap:wrap"><button class="btn primary" type="submit" id="c-send">Send</button><span id="c-toast" style="font-size:13px;color:var(--muted)"></span></div>
- <p style="font-size:12px;color:var(--faint);margin-top:12px">Goes to alon@dgb.vc. We read everything. No newsletter, no list.</p>
+ <p style="font-size:12px;color:var(--faint);margin-top:12px">Goes to alon@dgb.vc. We read everything. What you send is used only to reply to you and is kept in Draper Goren Blockchain's own systems: no newsletter, no list, never sold or shared, and never passed to Ownera. Ask us at <a href="mailto:alon@dgb.vc">alon@dgb.vc</a> for a copy or a deletion at any time.</p>
 </form>
 {CF_STYLE}
 <script>(function(){{var f=document.getElementById('cf'),t=document.getElementById('c-toast'),b=document.getElementById('c-send');var RE=/^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/;

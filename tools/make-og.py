@@ -8,7 +8,7 @@ CHROME=next((p for p in ['/Applications/Google Chrome.app/Contents/MacOS/Google 
     '/Applications/Chromium.app/Contents/MacOS/Chromium',shutil.which('google-chrome') or '',shutil.which('chromium') or ''] if p and Path(p).exists()),None)
 assert CHROME, 'no Chrome found'
 G=json.load(open(DATA/'graph.json')); APPS=json.load(open(DATA/'apps.json'))
-insts=len(G['institutions']); edges=len(G['edges']); srcs=len({r for i in G['institutions'] for r in i['refs']})
+insts=len(G['institutions']); edges=len(G['edges']); srcs=len(G['sources'])
 prod=sum(1 for a in APPS if a['status']=='production'); sand=sum(1 for a in APPS if a['status']=='sandbox'); dev=sum(1 for a in APPS if a['status']=='development')
 co=len({a.get('companyName') for a in APPS if a.get('companyName')})
 PAGES=[
