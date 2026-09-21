@@ -35,7 +35,7 @@ td:first-child{white-space:nowrap;font-family:var(--mono);font-size:12.5px}
 <h2>1. The shape of the network</h2>
 <p>Three things sit inside each institution: the business apps people use, the Router, and adapters that translate the Router's instructions into that institution's own ledgers and systems. Only signed instructions and proofs cross the boundary.</p>
 <figure>
-<svg viewBox="0 0 1000 566" role="img" aria-label="Three institutions, each with business apps, a Router and adapters inside its own perimeter; Routers connect peer to peer and discover each other through a registry; adapters connect down to blockchains, custody and legacy systems.">
+<svg viewBox="0 0 1000 584" role="img" aria-label="Three institutions, each with business apps, a Router and adapters inside its own perimeter; Routers connect peer to peer and discover each other through a registry; adapters connect down to blockchains, custody and legacy systems.">
 <defs>
  <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
  <marker id="arg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0C8F57"/></marker>
@@ -55,14 +55,14 @@ td:first-child{white-space:nowrap;font-family:var(--mono);font-size:12.5px}
  <text x="704" y="112" font-weight="600" font-size="13">Custodian / TA C</text>
  <text x="296" y="112" text-anchor="end" fill="#7d8784" font-size="11">org perimeter</text>
  <text x="631" y="112" text-anchor="end" fill="#7d8784" font-size="11">org perimeter</text>
- <text x="966" y="112" text-anchor="end" fill="#7d8784" font-size="11">org perimeter</text>
+ <text x="946" y="112" text-anchor="end" fill="#7d8784" font-size="11">org perimeter</text>
  <!-- per institution stack: apps, router, adapters -->
  <g id="stack">
   <rect x="45" y="130" width="240" height="46" rx="4" fill="none" stroke="currentColor"/>
   <text x="165" y="149" text-anchor="middle" font-weight="600">Business apps / SuperApps</text>
   <text x="165" y="165" text-anchor="middle" fill="#7d8784" font-size="11">trading · issuance · collateral · dashboards</text>
   <line x1="165" y1="176" x2="165" y2="210" stroke="currentColor" marker-end="url(#ar)"/>
-  <text x="172" y="197" fill="#7d8784" font-size="11">REST intents · GraphQL queries</text>
+  <text x="172" y="191" fill="#7d8784" font-size="10.5">REST intents</text><text x="172" y="204" fill="#7d8784" font-size="10.5">GraphQL queries</text>
   <rect x="45" y="212" width="240" height="56" rx="4" fill="#0C8F57" fill-opacity=".12" stroke="#0C8F57" stroke-width="1.6"/>
   <text x="165" y="235" text-anchor="middle" font-weight="600" font-size="13">Router</text>
   <text x="165" y="252" text-anchor="middle" fill="#7d8784" font-size="11">identity · orchestration plans · policies</text>
@@ -97,10 +97,10 @@ td:first-child{white-space:nowrap;font-family:var(--mono);font-size:12.5px}
  <text x="300" y="66" fill="#7d8784" font-size="11">discover peers</text>
  <text x="660" y="66" fill="#7d8784" font-size="11">discover peers</text>
  <!-- boundary note -->
- <rect x="20" y="470" width="960" height="76" rx="6" fill="#B7791F" fill-opacity=".10" stroke="#B7791F" stroke-opacity=".6"/>
+ <rect x="20" y="470" width="960" height="94" rx="6" fill="#B7791F" fill-opacity=".10" stroke="#B7791F" stroke-opacity=".6"/>
  <text x="40" y="495" font-weight="600" font-size="13">What leaves the perimeter</text>
  <text x="40" y="514" fill="#7d8784" font-size="12">Signed instructions, approved data and cryptographic proofs. Keys, positions, client data and compute stay inside.</text>
- <text x="40" y="531" fill="#7d8784" font-size="12">Each Router keeps its own state. There is no shared ledger and no party that sees the whole network, and any Router can transact with any other without a bilateral integration.</text>
+ <text x="40" y="531" fill="#7d8784" font-size="12">Each Router keeps its own state. There is no shared ledger and no party that sees the whole network,</text><text x="40" y="548" fill="#7d8784" font-size="12">and any Router can transact with any other without a bilateral integration.</text>
 </g>
 </svg>
 <figcaption><b>Each institution keeps its own Router.</b> Apps above it submit business intents and read state through one API. Adapters below it do the actual work on whichever ledger, custodian or legacy system the institution uses. The green dashed lines are the FinP2P network: Routers talking directly to each other.</figcaption>
@@ -118,39 +118,39 @@ td:first-child{white-space:nowrap;font-family:var(--mono);font-size:12.5px}
  <g font-weight="600" font-size="13"><text x="16" y="50">Investor's org</text><text x="16" y="230">Issuer's org</text><text x="16" y="410">Payment provider</text></g>
  <g fill="#7d8784" font-size="11"><text x="16" y="66">app + Router + custody adapter</text><text x="16" y="246">Router + ledger adapter (tokens)</text><text x="16" y="426">Router + payment adapter (cash)</text></g>
  <!-- step boxes, investor lane -->
- <rect x="230" y="90" width="150" height="54" rx="4" fill="none" stroke="currentColor"/>
- <text x="305" y="112" text-anchor="middle" font-weight="600">1 · Intent</text><text x="305" y="129" text-anchor="middle" fill="#7d8784" font-size="11">POST /finapi/tokens/execute</text>
- <rect x="420" y="90" width="170" height="54" rx="4" fill="#0C8F57" fill-opacity=".12" stroke="#0C8F57" stroke-width="1.6"/>
- <text x="505" y="112" text-anchor="middle" font-weight="600">2 · Plan</text><text x="505" y="129" text-anchor="middle" fill="#7d8784" font-size="11">Router picks chain, contract, custody</text>
- <rect x="630" y="90" width="150" height="54" rx="4" fill="none" stroke="currentColor"/>
- <text x="705" y="112" text-anchor="middle" font-weight="600">3 · Hold cash</text><text x="705" y="129" text-anchor="middle" fill="#7d8784" font-size="11">custody adapter signs</text>
- <rect x="820" y="90" width="160" height="54" rx="4" fill="#0C8F57" fill-opacity=".12" stroke="#0C8F57" stroke-width="1.6"/>
- <text x="900" y="112" text-anchor="middle" font-weight="600">7 · Completed</text><text x="900" y="129" text-anchor="middle" fill="#7d8784" font-size="11">GraphQL subscription fires</text>
+ <rect x="200" y="90" width="180" height="54" rx="4" fill="none" stroke="currentColor"/>
+ <text x="290" y="112" text-anchor="middle" font-weight="600">1 · Intent</text><text x="290" y="129" text-anchor="middle" fill="#7d8784" font-size="11">POST /finapi/tokens/execute</text>
+ <rect x="420" y="90" width="200" height="54" rx="4" fill="#0C8F57" fill-opacity=".12" stroke="#0C8F57" stroke-width="1.6"/>
+ <text x="520" y="112" text-anchor="middle" font-weight="600">2 · Plan</text><text x="520" y="129" text-anchor="middle" fill="#7d8784" font-size="11">Router picks chain, contract, custody</text>
+ <rect x="650" y="90" width="150" height="54" rx="4" fill="none" stroke="currentColor"/>
+ <text x="725" y="112" text-anchor="middle" font-weight="600">3 · Hold cash</text><text x="725" y="129" text-anchor="middle" fill="#7d8784" font-size="11">custody adapter signs</text>
+ <rect x="830" y="90" width="155" height="54" rx="4" fill="#0C8F57" fill-opacity=".12" stroke="#0C8F57" stroke-width="1.6"/>
+ <text x="907" y="112" text-anchor="middle" font-weight="600">7 · Completed</text><text x="907" y="129" text-anchor="middle" fill="#7d8784" font-size="11">GraphQL subscription fires</text>
  <line x1="380" y1="117" x2="418" y2="117" stroke="currentColor" marker-end="url(#ar2)"/>
- <line x1="590" y1="117" x2="628" y2="117" stroke="currentColor" marker-end="url(#ar2)"/>
+ <line x1="620" y1="117" x2="648" y2="117" stroke="currentColor" marker-end="url(#ar2)"/>
  <!-- issuer lane -->
- <rect x="420" y="270" width="170" height="54" rx="4" fill="none" stroke="currentColor"/>
- <text x="505" y="292" text-anchor="middle" font-weight="600">4 · Approve plan</text><text x="505" y="309" text-anchor="middle" fill="#7d8784" font-size="11">policy check, then sign</text>
- <rect x="630" y="270" width="150" height="54" rx="4" fill="none" stroke="currentColor"/>
- <text x="705" y="292" text-anchor="middle" font-weight="600">5 · Issue tokens</text><text x="705" y="309" text-anchor="middle" fill="#7d8784" font-size="11">on-chain tx via adapter</text>
+ <rect x="420" y="270" width="200" height="54" rx="4" fill="none" stroke="currentColor"/>
+ <text x="520" y="292" text-anchor="middle" font-weight="600">4 · Approve plan</text><text x="520" y="309" text-anchor="middle" fill="#7d8784" font-size="11">policy check, then sign</text>
+ <rect x="650" y="270" width="150" height="54" rx="4" fill="none" stroke="currentColor"/>
+ <text x="725" y="292" text-anchor="middle" font-weight="600">5 · Issue tokens</text><text x="725" y="309" text-anchor="middle" fill="#7d8784" font-size="11">on-chain tx via adapter</text>
  <!-- payment lane -->
- <rect x="630" y="450" width="150" height="54" rx="4" fill="none" stroke="currentColor"/>
- <text x="705" y="472" text-anchor="middle" font-weight="600">6 · Release cash</text><text x="705" y="489" text-anchor="middle" fill="#7d8784" font-size="11">DvP leg settles</text>
+ <rect x="650" y="450" width="150" height="54" rx="4" fill="none" stroke="currentColor"/>
+ <text x="725" y="472" text-anchor="middle" font-weight="600">6 · Release cash</text><text x="725" y="489" text-anchor="middle" fill="#7d8784" font-size="11">DvP leg settles</text>
  <!-- cross-lane arrows -->
- <line x1="505" y1="144" x2="505" y2="268" stroke="#0C8F57" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar2)"/>
- <text x="512" y="200" fill="#0C8F57" font-size="11" font-weight="600">plan proposal</text>
- <text x="512" y="214" fill="#7d8784" font-size="11">Router to Router</text>
- <line x1="590" y1="297" x2="628" y2="297" stroke="currentColor" marker-end="url(#ar2)"/>
- <line x1="705" y1="144" x2="705" y2="268" stroke="#0C8F57" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar2)"/>
- <line x1="705" y1="324" x2="705" y2="448" stroke="#0C8F57" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar2)"/>
- <text x="712" y="390" fill="#0C8F57" font-size="11" font-weight="600">receipt + proof</text>
- <text x="712" y="404" fill="#7d8784" font-size="11">signed by executing org</text>
- <path d="M780,477 C860,477 900,300 900,146" fill="none" stroke="#0C8F57" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar2)"/>
- <text x="862" y="330" fill="#0C8F57" font-size="11" font-weight="600">receipts</text>
+ <line x1="520" y1="144" x2="520" y2="268" stroke="#0C8F57" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar2)"/>
+ <text x="527" y="200" fill="#0C8F57" font-size="11" font-weight="600">plan proposal</text>
+ <text x="527" y="214" fill="#7d8784" font-size="11">Router to Router</text>
+ <line x1="620" y1="297" x2="648" y2="297" stroke="currentColor" marker-end="url(#ar2)"/>
+ <line x1="725" y1="144" x2="725" y2="268" stroke="#0C8F57" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar2)"/>
+ <line x1="725" y1="324" x2="725" y2="448" stroke="#0C8F57" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar2)"/>
+ <text x="732" y="390" fill="#0C8F57" font-size="11" font-weight="600">receipt + proof</text>
+ <text x="732" y="404" fill="#7d8784" font-size="11">signed by executing org</text>
+ <path d="M800,477 C880,477 907,300 907,146" fill="none" stroke="#0C8F57" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar2)"/>
+ <text x="872" y="330" fill="#0C8F57" font-size="11" font-weight="600">receipts</text>
  <!-- app on the left -->
- <rect x="130" y="90" width="80" height="54" rx="4" fill="none" stroke="currentColor"/>
- <text x="170" y="112" text-anchor="middle" font-weight="600">App</text><text x="170" y="129" text-anchor="middle" fill="#7d8784" font-size="11">investor UI</text>
- <line x1="210" y1="117" x2="228" y2="117" stroke="currentColor" marker-end="url(#ar2)"/>
+ <rect x="100" y="90" width="80" height="54" rx="4" fill="none" stroke="currentColor"/>
+ <text x="140" y="112" text-anchor="middle" font-weight="600">App</text><text x="140" y="129" text-anchor="middle" fill="#7d8784" font-size="11">investor UI</text>
+ <line x1="180" y1="117" x2="198" y2="117" stroke="currentColor" marker-end="url(#ar2)"/>
  <!-- states -->
  <rect x="16" y="540" width="968" height="96" rx="6" fill="#B7791F" fill-opacity=".10" stroke="#B7791F" stroke-opacity=".6"/>
  <text x="36" y="565" font-weight="600" font-size="13">Plan state, as the app sees it</text>
