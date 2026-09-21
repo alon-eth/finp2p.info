@@ -1,0 +1,208 @@
+<title>How FinP2P Works</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{--ground:#F6F4EE;--paper:#FFFFFF;--ink:#17211F;--muted:#5C6865;--faint:#9AA39F;--line:#D8D3C6;--accent:#0C8F57;--accent-soft:rgba(12,143,87,.10);--warm:#B7791F;--warm-soft:rgba(183,121,31,.12);
+ --serif:'Newsreader',Georgia,serif;--sans:'Instrument Sans','Helvetica Neue',Arial,sans-serif;--mono:'JetBrains Mono',ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ground:#0F1413;--paper:#161C1B;--ink:#EEF1EE;--muted:#9FAAA5;--faint:#6B7571;--line:#2A3331;--accent:#3ED08F;--accent-soft:rgba(62,208,143,.13);--warm:#E0A94A;--warm-soft:rgba(224,169,74,.14)}}
+:root[data-theme="dark"]{--ground:#0F1413;--paper:#161C1B;--ink:#EEF1EE;--muted:#9FAAA5;--faint:#6B7571;--line:#2A3331;--accent:#3ED08F;--accent-soft:rgba(62,208,143,.13);--warm:#E0A94A;--warm-soft:rgba(224,169,74,.14)}
+body{background:var(--ground);color:var(--ink);font:16px/1.6 var(--sans);margin:0}
+.wrap{max-width:900px;margin:0 auto;padding-block:48px 72px;padding-inline:20px}
+h1{font:400 clamp(34px,5vw,52px)/1.08 var(--serif);letter-spacing:-.01em;margin:0 0 14px;text-wrap:balance}
+h2{font:400 clamp(24px,3vw,32px)/1.2 var(--serif);margin:56px 0 8px;text-wrap:balance}
+.eyebrow{font:600 12px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+p{max-width:66ch;color:var(--muted);margin:10px 0}
+p strong{color:var(--ink);font-weight:600}
+figure{margin:22px 0 0;background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:18px 18px 12px;overflow-x:auto}
+figure svg{display:block;width:100%;height:auto;min-width:640px;color:var(--ink);font-family:var(--sans)}
+figure svg text{fill:currentColor}figure svg text[fill="#7d8784"]{fill:var(--muted)}figure svg text[fill="#0C8F57"]{fill:var(--accent)}
+figcaption{font-size:13.5px;color:var(--muted);margin-top:12px;max-width:80ch;line-height:1.5}
+figcaption b{color:var(--ink);font-weight:600}
+table{border-collapse:collapse;width:100%;font-size:14px;margin-top:16px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:600}
+td:first-child{white-space:nowrap;font-family:var(--mono);font-size:12.5px}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-top:10px}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.sw{width:26px;height:0;border-top:2px solid var(--ink)}.sw.dash{border-top-style:dashed}.sw.acc{border-top-color:var(--accent)}.sw.warm{border-top-color:var(--warm)}
+.foot{margin-top:48px;font-size:13px;color:var(--faint);border-top:1px solid var(--line);padding-top:14px}
+@media (max-width:600px){figure{padding:12px}}
+</style>
+<div class="wrap">
+<div class="eyebrow">Ownera · FinP2P</div>
+<h1>How FinP2P works</h1>
+<p>FinP2P is not a blockchain. It is a way for financial institutions to run transactions across many blockchains, custodians and legacy systems without integrating with each other one by one. Every institution runs its own <strong>Router</strong> inside its own walls. Routers find each other and talk peer to peer. An application only ever talks to its local Router.</p>
+
+<h2>1. The shape of the network</h2>
+<p>Three things sit inside each institution: the business apps people use, the Router, and adapters that translate the Router's instructions into that institution's own ledgers and systems. Only signed instructions and proofs cross the boundary.</p>
+<figure>
+<svg viewBox="0 0 1000 566" role="img" aria-label="Three institutions, each with business apps, a Router and adapters inside its own perimeter; Routers connect peer to peer and discover each other through a registry; adapters connect down to blockchains, custody and legacy systems.">
+<defs>
+ <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
+ <marker id="arg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0C8F57"/></marker>
+</defs>
+<g font-size="12" fill="currentColor">
+ <!-- registry -->
+ <rect x="410" y="18" width="180" height="40" rx="4" fill="none" stroke="currentColor" stroke-dasharray="3 3"/>
+ <text x="500" y="35" text-anchor="middle" font-weight="600">Network registry</text>
+ <text x="500" y="50" text-anchor="middle" fill="#7d8784" font-size="11">Router addresses and identities</text>
+ <!-- institutions -->
+ <g id="inst">
+  <rect x="20" y="90" width="290" height="330" rx="8" fill="none" stroke="currentColor" stroke-width="1.6"/>
+ </g>
+ <use href="#inst" x="335"/><use href="#inst" x="670"/>
+ <text x="34" y="112" font-weight="600" font-size="13">Bank A</text>
+ <text x="369" y="112" font-weight="600" font-size="13">Trading venue B</text>
+ <text x="704" y="112" font-weight="600" font-size="13">Custodian / TA C</text>
+ <text x="296" y="112" text-anchor="end" fill="#7d8784" font-size="11">org perimeter</text>
+ <text x="631" y="112" text-anchor="end" fill="#7d8784" font-size="11">org perimeter</text>
+ <text x="966" y="112" text-anchor="end" fill="#7d8784" font-size="11">org perimeter</text>
+ <!-- per institution stack: apps, router, adapters -->
+ <g id="stack">
+  <rect x="45" y="130" width="240" height="46" rx="4" fill="none" stroke="currentColor"/>
+  <text x="165" y="149" text-anchor="middle" font-weight="600">Business apps / SuperApps</text>
+  <text x="165" y="165" text-anchor="middle" fill="#7d8784" font-size="11">trading · issuance · collateral · dashboards</text>
+  <line x1="165" y1="176" x2="165" y2="210" stroke="currentColor" marker-end="url(#ar)"/>
+  <text x="172" y="197" fill="#7d8784" font-size="11">REST intents · GraphQL queries</text>
+  <rect x="45" y="212" width="240" height="56" rx="4" fill="#0C8F57" fill-opacity=".12" stroke="#0C8F57" stroke-width="1.6"/>
+  <text x="165" y="235" text-anchor="middle" font-weight="600" font-size="13">Router</text>
+  <text x="165" y="252" text-anchor="middle" fill="#7d8784" font-size="11">identity · orchestration plans · policies</text>
+  <line x1="95" y1="268" x2="95" y2="300" stroke="currentColor" marker-end="url(#ar)"/>
+  <line x1="165" y1="268" x2="165" y2="300" stroke="currentColor" marker-end="url(#ar)"/>
+  <line x1="235" y1="268" x2="235" y2="300" stroke="currentColor" marker-end="url(#ar)"/>
+  <rect x="50" y="302" width="80" height="40" rx="3" fill="none" stroke="currentColor"/>
+  <text x="90" y="319" text-anchor="middle" font-size="11" font-weight="600">Ledger</text><text x="90" y="333" text-anchor="middle" font-size="10.5" fill="#7d8784">adapter</text>
+  <rect x="125" y="302" width="80" height="40" rx="3" fill="none" stroke="currentColor"/>
+  <text x="165" y="319" text-anchor="middle" font-size="11" font-weight="600">Custody</text><text x="165" y="333" text-anchor="middle" font-size="10.5" fill="#7d8784">adapter</text>
+  <rect x="200" y="302" width="80" height="40" rx="3" fill="none" stroke="currentColor"/>
+  <text x="240" y="319" text-anchor="middle" font-size="11" font-weight="600">Data</text><text x="240" y="333" text-anchor="middle" font-size="10.5" fill="#7d8784">adapter</text>
+  <line x1="90" y1="342" x2="90" y2="380" stroke="currentColor" marker-end="url(#ar)"/>
+  <line x1="165" y1="342" x2="165" y2="380" stroke="currentColor" marker-end="url(#ar)"/>
+  <line x1="240" y1="342" x2="240" y2="380" stroke="currentColor" marker-end="url(#ar)"/>
+  <text x="90" y="398" text-anchor="middle" font-size="11">chains, CSDs</text>
+  <text x="165" y="398" text-anchor="middle" font-size="11">keys, wallets</text>
+  <text x="240" y="398" text-anchor="middle" font-size="11">prices, ratings</text>
+  <text x="165" y="412" text-anchor="middle" font-size="10.5" fill="#7d8784">Ethereum · Canton · Corda · XRPL · legacy books</text>
+ </g>
+ <use href="#stack" x="335"/><use href="#stack" x="670"/>
+ <!-- peer to peer between routers -->
+ <line x1="285" y1="240" x2="380" y2="240" stroke="#0C8F57" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arg)" marker-start="url(#arg)"/>
+ <line x1="620" y1="240" x2="715" y2="240" stroke="#0C8F57" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arg)" marker-start="url(#arg)"/>
+ <text x="332" y="230" text-anchor="middle" fill="#0C8F57" font-size="11" font-weight="600">peer to peer</text>
+ <text x="667" y="230" text-anchor="middle" fill="#0C8F57" font-size="11" font-weight="600">peer to peer</text>
+ <!-- A to C over the top -->
+ <!-- registry lookups -->
+ <line x1="165" y1="90" x2="420" y2="52" stroke="currentColor" stroke-dasharray="3 3" opacity=".55"/>
+ <line x1="500" y1="90" x2="500" y2="58" stroke="currentColor" stroke-dasharray="3 3" opacity=".55"/>
+ <line x1="835" y1="90" x2="580" y2="52" stroke="currentColor" stroke-dasharray="3 3" opacity=".55"/>
+ <text x="300" y="66" fill="#7d8784" font-size="11">discover peers</text>
+ <text x="660" y="66" fill="#7d8784" font-size="11">discover peers</text>
+ <!-- boundary note -->
+ <rect x="20" y="470" width="960" height="76" rx="6" fill="#B7791F" fill-opacity=".10" stroke="#B7791F" stroke-opacity=".6"/>
+ <text x="40" y="495" font-weight="600" font-size="13">What leaves the perimeter</text>
+ <text x="40" y="514" fill="#7d8784" font-size="12">Signed instructions, approved data and cryptographic proofs. Keys, positions, client data and compute stay inside.</text>
+ <text x="40" y="531" fill="#7d8784" font-size="12">Each Router keeps its own state. There is no shared ledger and no party that sees the whole network, and any Router can transact with any other without a bilateral integration.</text>
+</g>
+</svg>
+<figcaption><b>Each institution keeps its own Router.</b> Apps above it submit business intents and read state through one API. Adapters below it do the actual work on whichever ledger, custodian or legacy system the institution uses. The green dashed lines are the FinP2P network: Routers talking directly to each other.</figcaption>
+<div class="legend"><span><i class="sw acc dash"></i>Router to Router (FinP2P)</span><span><i class="sw"></i>inside one institution</span><span><i class="sw dash"></i>discovery only</span></div>
+</figure>
+
+<h2>2. One transaction, end to end</h2>
+<p>The unit of work is a <strong>business intent</strong>: "buy 10,000 units of this fund, settle in USD." The app never says which chain, contract or custodian. The Router turns the intent into an <strong>orchestration plan</strong>, a set of instructions spread across every Router involved, and drives it to completion.</p>
+<figure>
+<svg viewBox="0 0 1000 648" role="img" aria-label="Swimlane of a primary sale: the investor's app submits an intent to its Router, which builds an orchestration plan, coordinates hold, transfer and release instructions with the issuer's and payment provider's Routers, whose adapters execute on their ledgers and return signed receipts, until the plan completes.">
+<defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+<g font-size="12" fill="currentColor">
+ <!-- lanes -->
+ <g stroke="currentColor" stroke-opacity=".25"><line x1="0" y1="70" x2="1000" y2="70"/><line x1="0" y1="250" x2="1000" y2="250"/><line x1="0" y1="430" x2="1000" y2="430"/></g>
+ <g font-weight="600" font-size="13"><text x="16" y="50">Investor's org</text><text x="16" y="230">Issuer's org</text><text x="16" y="410">Payment provider</text></g>
+ <g fill="#7d8784" font-size="11"><text x="16" y="66">app + Router + custody adapter</text><text x="16" y="246">Router + ledger adapter (tokens)</text><text x="16" y="426">Router + payment adapter (cash)</text></g>
+ <!-- step boxes, investor lane -->
+ <rect x="230" y="90" width="150" height="54" rx="4" fill="none" stroke="currentColor"/>
+ <text x="305" y="112" text-anchor="middle" font-weight="600">1 · Intent</text><text x="305" y="129" text-anchor="middle" fill="#7d8784" font-size="11">POST /finapi/tokens/execute</text>
+ <rect x="420" y="90" width="170" height="54" rx="4" fill="#0C8F57" fill-opacity=".12" stroke="#0C8F57" stroke-width="1.6"/>
+ <text x="505" y="112" text-anchor="middle" font-weight="600">2 · Plan</text><text x="505" y="129" text-anchor="middle" fill="#7d8784" font-size="11">Router picks chain, contract, custody</text>
+ <rect x="630" y="90" width="150" height="54" rx="4" fill="none" stroke="currentColor"/>
+ <text x="705" y="112" text-anchor="middle" font-weight="600">3 · Hold cash</text><text x="705" y="129" text-anchor="middle" fill="#7d8784" font-size="11">custody adapter signs</text>
+ <rect x="820" y="90" width="160" height="54" rx="4" fill="#0C8F57" fill-opacity=".12" stroke="#0C8F57" stroke-width="1.6"/>
+ <text x="900" y="112" text-anchor="middle" font-weight="600">7 · Completed</text><text x="900" y="129" text-anchor="middle" fill="#7d8784" font-size="11">GraphQL subscription fires</text>
+ <line x1="380" y1="117" x2="418" y2="117" stroke="currentColor" marker-end="url(#ar2)"/>
+ <line x1="590" y1="117" x2="628" y2="117" stroke="currentColor" marker-end="url(#ar2)"/>
+ <!-- issuer lane -->
+ <rect x="420" y="270" width="170" height="54" rx="4" fill="none" stroke="currentColor"/>
+ <text x="505" y="292" text-anchor="middle" font-weight="600">4 · Approve plan</text><text x="505" y="309" text-anchor="middle" fill="#7d8784" font-size="11">policy check, then sign</text>
+ <rect x="630" y="270" width="150" height="54" rx="4" fill="none" stroke="currentColor"/>
+ <text x="705" y="292" text-anchor="middle" font-weight="600">5 · Issue tokens</text><text x="705" y="309" text-anchor="middle" fill="#7d8784" font-size="11">on-chain tx via adapter</text>
+ <!-- payment lane -->
+ <rect x="630" y="450" width="150" height="54" rx="4" fill="none" stroke="currentColor"/>
+ <text x="705" y="472" text-anchor="middle" font-weight="600">6 · Release cash</text><text x="705" y="489" text-anchor="middle" fill="#7d8784" font-size="11">DvP leg settles</text>
+ <!-- cross-lane arrows -->
+ <line x1="505" y1="144" x2="505" y2="268" stroke="#0C8F57" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar2)"/>
+ <text x="512" y="200" fill="#0C8F57" font-size="11" font-weight="600">plan proposal</text>
+ <text x="512" y="214" fill="#7d8784" font-size="11">Router to Router</text>
+ <line x1="590" y1="297" x2="628" y2="297" stroke="currentColor" marker-end="url(#ar2)"/>
+ <line x1="705" y1="144" x2="705" y2="268" stroke="#0C8F57" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar2)"/>
+ <line x1="705" y1="324" x2="705" y2="448" stroke="#0C8F57" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar2)"/>
+ <text x="712" y="390" fill="#0C8F57" font-size="11" font-weight="600">receipt + proof</text>
+ <text x="712" y="404" fill="#7d8784" font-size="11">signed by executing org</text>
+ <path d="M780,477 C860,477 900,300 900,146" fill="none" stroke="#0C8F57" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar2)"/>
+ <text x="862" y="330" fill="#0C8F57" font-size="11" font-weight="600">receipts</text>
+ <!-- app on the left -->
+ <rect x="130" y="90" width="80" height="54" rx="4" fill="none" stroke="currentColor"/>
+ <text x="170" y="112" text-anchor="middle" font-weight="600">App</text><text x="170" y="129" text-anchor="middle" fill="#7d8784" font-size="11">investor UI</text>
+ <line x1="210" y1="117" x2="228" y2="117" stroke="currentColor" marker-end="url(#ar2)"/>
+ <!-- states -->
+ <rect x="16" y="540" width="968" height="96" rx="6" fill="#B7791F" fill-opacity=".10" stroke="#B7791F" stroke-opacity=".6"/>
+ <text x="36" y="565" font-weight="600" font-size="13">Plan state, as the app sees it</text>
+ <g font-family="JetBrains Mono, monospace" font-size="12">
+  <text x="36" y="592">Pending</text><text x="118" y="592">→</text><text x="140" y="592">InProgress</text><text x="248" y="592">→</text><text x="270" y="592" fill="#0C8F57" font-weight="600">Completed</text>
+  <text x="400" y="592">or</text><text x="430" y="592">Rejected</text><text x="520" y="592">or</text><text x="550" y="592">Failed</text>
+ </g>
+ <text x="36" y="611" fill="#7d8784" font-size="11">Every step is atomic across parties: if the issuer never signs, the cash hold is rolled back and nothing moved.</text>
+ <text x="36" y="626" fill="#7d8784" font-size="11">Every step leaves a receipt with a ledger proof the counterparty can verify without access to the ledger itself.</text>
+</g>
+</svg>
+<figcaption><b>A primary sale of a tokenized fund.</b> The investor's Router authors the plan; the issuer's and payment provider's Routers each execute only their own instruction on their own ledger through their own adapter. Nobody hands keys or positions to anyone else. The app polls or subscribes for the plan status and gets receipts when it completes.</figcaption>
+</figure>
+
+<h2>3. What the Router works with</h2>
+<p>Four identities and three primitives cover everything. Developers mostly create profiles, submit intents and watch plans; they rarely touch orchestration plans directly.</p>
+<table>
+<tr><th>Thing</th><th>What it is</th><th>Example</th></tr>
+<tr><td>Router identity</td><td>An organization on the network. Cryptographically anchored; other Routers trust it through the registry.</td><td>bank-us</td></tr>
+<tr><td>Investor identity</td><td>A client profile with one or more FinIDs (public keys) across custodians, plus KYC and accreditation certificates.</td><td>bank-us:101:&lt;uuid&gt;</td></tr>
+<tr><td>Asset identity</td><td>One asset profile with representations on each chain it lives on, plus KYA and NAV certificates.</td><td>issuer-de:102:&lt;uuid&gt;</td></tr>
+<tr><td>App identity</td><td>A business app or connector, used for auth, routing and audit.</td><td>SuperApp ID</td></tr>
+<tr><td>Intent</td><td>A business action with a schema: primary sale, secondary buy or sell, transfer, redemption, repo loan.</td><td>bank-us:105:&lt;uuid&gt;</td></tr>
+<tr><td>Orchestration plan</td><td>The distributed workflow the Router generates from an intent and runs across participants.</td><td>bank-us:106:&lt;uuid&gt;</td></tr>
+<tr><td>Adapter</td><td>Code the institution runs beside its Router: ledger, custody, payment or data. Speaks a fixed API; the Router never sees the ledger directly.</td><td>EVM adapter, our LunarCrush data adapter</td></tr>
+</table>
+
+<h2>4. Where our data utility plugs in</h2>
+<p>A data provider is just another adapter, on the provider's side rather than the consumer's. It answers pull and subscribe requests and pushes items into a Router's ingest endpoint. That Router can then re-share the feed to peers under an access list, so one adapter serves the whole network.</p>
+<figure>
+<svg viewBox="0 0 1000 200" role="img" aria-label="LunarCrush API feeds the data adapter, which pushes into the provider Router's ingest endpoint; the provider Router re-shares to peer Routers, whose apps read the data through GraphQL.">
+<defs><marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+<g font-size="12" fill="currentColor">
+ <rect x="16" y="60" width="150" height="60" rx="4" fill="#B7791F" fill-opacity=".12" stroke="#B7791F"/>
+ <text x="91" y="85" text-anchor="middle" font-weight="600">LunarCrush API</text><text x="91" y="102" text-anchor="middle" fill="#7d8784" font-size="11">4,400 stocks and ETFs</text>
+ <line x1="166" y1="90" x2="214" y2="90" stroke="currentColor" marker-end="url(#ar3)"/><text x="190" y="80" text-anchor="middle" fill="#7d8784" font-size="10.5">poll</text>
+ <rect x="216" y="60" width="170" height="60" rx="4" fill="none" stroke="currentColor"/>
+ <text x="301" y="85" text-anchor="middle" font-weight="600">Data adapter</text><text x="301" y="102" text-anchor="middle" fill="#7d8784" font-size="11">ISIN / CAIP-19 → symbol</text>
+ <line x1="386" y1="90" x2="434" y2="90" stroke="currentColor" marker-end="url(#ar3)"/><text x="410" y="80" text-anchor="middle" fill="#7d8784" font-size="10.5">ingest</text>
+ <rect x="436" y="60" width="170" height="60" rx="4" fill="#0C8F57" fill-opacity=".12" stroke="#0C8F57" stroke-width="1.6"/>
+ <text x="521" y="85" text-anchor="middle" font-weight="600">Provider Router</text><text x="521" y="102" text-anchor="middle" fill="#7d8784" font-size="11">data rules + access list</text>
+ <line x1="606" y1="90" x2="654" y2="90" stroke="#0C8F57" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar3)"/><text x="630" y="80" text-anchor="middle" fill="#0C8F57" font-size="10.5" font-weight="600">re-share</text>
+ <rect x="656" y="20" width="150" height="44" rx="4" fill="none" stroke="currentColor"/><text x="731" y="46" text-anchor="middle" font-weight="600">Bank Router</text>
+ <rect x="656" y="68" width="150" height="44" rx="4" fill="none" stroke="currentColor"/><text x="731" y="94" text-anchor="middle" font-weight="600">Venue Router</text>
+ <rect x="656" y="116" width="150" height="44" rx="4" fill="none" stroke="currentColor"/><text x="731" y="142" text-anchor="middle" font-weight="600">TA Router</text>
+ <line x1="806" y1="42" x2="854" y2="42" stroke="currentColor" marker-end="url(#ar3)"/><line x1="806" y1="90" x2="854" y2="90" stroke="currentColor" marker-end="url(#ar3)"/><line x1="806" y1="138" x2="854" y2="138" stroke="currentColor" marker-end="url(#ar3)"/>
+ <text x="920" y="46" text-anchor="middle" font-size="11">collateral desk</text><text x="920" y="94" text-anchor="middle" font-size="11">Investor SuperApp</text><text x="920" y="142" text-anchor="middle" font-size="11">LP portal</text>
+ <text x="920" y="176" text-anchor="middle" fill="#7d8784" font-size="10.5">GraphQL assetDatas</text>
+</g>
+</svg>
+<figcaption><b>The Social and Market Data SuperApp is the "Data adapter" box.</b> It never touches a trade. Consumer Routers subscribe to it the same way they subscribe to a price or ratings feed.</figcaption>
+</figure>
+
+<div class="foot">Drawn from Ownera's developer documentation (finp2p-docs.ownera.io) and the SuperApps store. Simplified: real plans have more instruction types (hold, release, transfer, issue, await, redeem) and Routers can also be Ownera-hosted or shared through a hub.</div>
+</div>

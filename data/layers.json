@@ -1,0 +1,56 @@
+{
+ "note": "Every connected piece of the FinP2P puzzle, by layer, following Ownera's own 'How It Works' picture: counterparties run Routers; Routers orchestrate across chains, internal platforms and SuperApps. Each entry carries a public source id from graph.json sources or a URL.",
+ "layers": [
+  {"id":"chains","title":"Blockchains and ledgers the Routers reach","blurb":"Through the Universal Blockchain Connector and per-chain adapters. LayerZero extends reach to 150+ more.","items":[
+   {"name":"Ethereum and all EVM L1/L2","src":"https://superapps.ownera.io/app/universal-blockchain-connector","note":"reference adapter open source (finp2p-ethereum-adapter)"},
+   {"name":"Hyperledger Besu","src":"https://superapps.ownera.io/app/cross-chain-asset-converter","note":"DTCC AppChain runs on Besu"},
+   {"name":"Canton","src":"https://www.ledgerinsights.com/jp-morgan-backed-ownera-partners-with-digital-assets-canton-network/","note":"Digital Asset partnership; GS DAP runs on Canton"},
+   {"name":"Corda","src":"https://www.ownera.io/news","note":"R3 partnership, Sept 2024"},
+   {"name":"Hedera","src":"https://www.ownera.io/news","note":"Hedera Foundation partnership, Dec 2025; Hedera ATS plugin in the EVM adapter"},
+   {"name":"XRP Ledger","src":"https://superapps.ownera.io/app/universal-blockchain-connector","note":"listed under non-EVM chains"},
+   {"name":"Tezos","src":"https://github.com/owneraio/finp2p-tezos-adapter","note":"open-source adapter, 2022"},
+   {"name":"Stellar","src":"https://www.gdf.io/wp-content/uploads/2026/07/6.07.26_Unlocking-Capital-with-U.S-Tokenized-Money-Market-Funds-for-Collateral-Mobility.pdf","note":"Stellar Development Foundation in the US sandbox; Nomyx deploys on Stellar"},
+   {"name":"Kadena","src":"https://www.ownera.io/news","note":"Kadena partnership, Jan 2025"},
+   {"name":"Solana, Base, Polygon","src":"https://www.ownera.io/","note":"named on Ownera's site among supported networks"},
+   {"name":"150+ chains via LayerZero","src":"https://www.crowdfundinsider.com/2025/12/256991-uk-fintech-ownera-layerzero-partner-to-enable-cross-chain-tokenization/","note":"LayerZero Cross-chain Connector SuperApp"}
+  ]},
+  {"id":"standards","title":"Token standards and smart-contract families the adapters speak","blurb":"Plugins in Ownera's open-source EVM adapter, plus the standards named on the connector listing.","items":[
+   {"name":"ERC-20","src":"https://github.com/owneraio/finp2p-ethereum-adapter","note":"built in"},
+   {"name":"ERC-3643 (T-REX, Tokeny)","src":"https://github.com/owneraio/finp2p-ethereum-adapter","note":"plugin; Tokeny partnership"},
+   {"name":"CMTAT (Taurus, UBS)","src":"https://github.com/owneraio/finp2p-ethereum-adapter","note":"plugin"},
+   {"name":"BENJI (Franklin Templeton)","src":"https://github.com/owneraio/finp2p-ethereum-adapter","note":"plugin"},
+   {"name":"Hedera ATS","src":"https://github.com/owneraio/finp2p-ethereum-adapter","note":"plugin"},
+   {"name":"Ownera Collateral Registry","src":"https://github.com/owneraio/finp2p-ethereum-adapter","note":"plugin"},
+   {"name":"DTCC Collateral Account","src":"https://github.com/owneraio/finp2p-ethereum-adapter","note":"plugin"}
+  ]},
+  {"id":"cash","title":"Cash and settlement rails","blurb":"The payment leg of DvP, PvP and repo, through the Payment Provider Service and the Universal Stablecoin Connector.","items":[
+   {"name":"Kinexys Digital Payments (J.P. Morgan)","src":"https://www.hqla-x.com/post/j-p-morgan-hqlax-and-ownera-launch-intraday-repo-solution-with-5bn-traded-in-the-first-month","note":"live: cash leg of intraday repo"},
+   {"name":"Fnality Payment System","src":"https://fnality.com/news/fnality-and-ownera-interconnect-digital-money-to-institutional-tokenisation-market","note":"partnership Sept 2024; wholesale digital money"},
+   {"name":"USDC (Circle)","src":"https://www.banklesstimes.com/news/2021/03/25/ownera-enlists-fireblocks-to-enable-finp2p-digital-custody-and-settlement-solutions/","note":"settlement since 2021 via Fireblocks"},
+   {"name":"Adhara","src":"https://www.ownera.io/news","note":"partnership Sept 2024: cross-market digital cash and collateral"},
+   {"name":"Bank accounts and fiat","src":"https://superapps.ownera.io/app/payment-provider-hub","note":"Payment Provider Service"},
+   {"name":"ISO 20022 / SWIFT messaging","src":"https://superapps.ownera.io/app/iso-20022-compatibility-connector","note":"connector in development"}
+  ]},
+  {"id":"custody","title":"Custody and key management","blurb":"Behind the Custodian Service and the custody-tech connector.","items":[
+   {"name":"Archax (regulated custodian, first distribution partner)","src":"https://www.businesswire.com/news/home/20221115005819/en/Archax-and-Ownera-Partner-to-Deliver-Global-Distribution-for-Digital-Securities","note":""},
+   {"name":"Fireblocks","src":"https://www.einpresswire.com/article/747711243/fireblocks-and-ownera-partner-to-widen-the-distribution-and-trading-of-tokenized-assets-on-the-fireblocks-network","note":"2,000+ Fireblocks Network members"},
+   {"name":"DFNS","src":"https://finadium.com/dfns-and-ownera-team-up-for-collateral-mobility-and-intraday-financing/","note":""},
+   {"name":"Zodia Custody / Zodia Solutions","src":"https://zodia-custody.com/ownera-and-zodia-solutions-to-combine-multi-chain-collateral-orchestration-with-institutional-risk-management-and-post-trade-control-through-the-open-collateral-network/","note":"Open Collateral Network collaboration, Sept 2026"},
+   {"name":"BitGo, GK8, Taurus","src":"https://ocn.ownera.io/files/gdf-eu-uk-tmmf-collateral-report-2025.pdf","note":"sandbox contributors"}
+  ]},
+  {"id":"platforms","title":"Internal platforms and market infrastructures connected","blurb":"The 'Internal Platforms' box in Ownera's diagram: the incumbent systems a Router plugs into.","items":[
+   {"name":"HQLAx (collateral, live)","src":"https://www.hqla-x.com/post/j-p-morgan-hqlax-and-ownera-launch-intraday-repo-solution-with-5bn-traded-in-the-first-month","note":""},
+   {"name":"DTCC AppChain / Digital Launchpad","src":"https://www.dtcc.com/dtcc-connection/articles/2026/april/29/one-year-later-how-dtccs-great-global-collateral-experiment-changed-the-conversation","note":"Great Collateral Experiment; CSD Distribution Platform"},
+   {"name":"GS DAP (Goldman Sachs)","src":"https://www.coindesk.com/business/2026/06/04/goldman-sachs-teams-with-apex-archax-for-tokenized-real-estate-fund","note":"tokenized real estate fund"},
+   {"name":"Euroclear, Clearstream D7","src":"https://ocn.ownera.io/files/gdf-eu-uk-tmmf-collateral-report-2025.pdf","note":"Euroclear in EU/UK working group; Clearstream custodies HQLAx collateral"},
+   {"name":"Exberry matching engine","src":"https://superapps.ownera.io/app/exberry-matching-engine","note":"production SuperApp"},
+   {"name":"FIX-connected OMS and ATSs","src":"https://www.gdf.io/wp-content/uploads/2020/12/GDFFIX_WhitePaperFV_030225.pdf","note":"FIX Trading Community alliance"}
+  ]},
+  {"id":"industry","title":"Industry bodies and standards that shape the network","blurb":"Where the rules, sandboxes and message standards come from.","items":[
+   {"name":"ISDA","src":"https://www.gdf.io/wp-content/uploads/2026/07/6.07.26_Unlocking-Capital-with-U.S-Tokenized-Money-Market-Funds-for-Collateral-Mobility.pdf","note":"co-sponsor, US tokenized collateral working group"},
+   {"name":"Global Digital Finance (GDF)","src":"https://mondovisione.com/media-and-resources/news/gdf-announces-report-and-industry-sandbox-results-for-collateral-mobility-in-tok-2025113/","note":"co-sponsor; sandboxes powered by Ownera"},
+   {"name":"FIX Trading Community","src":"https://www.gdf.io/wp-content/uploads/2020/12/GDFFIX_WhitePaperFV_030225.pdf","note":"FIX to FinP2P interoperability alliance"},
+   {"name":"CFTC (uncleared margin rule, Jul 2026)","src":"https://www.cftc.gov/PressRoom/PressReleases/9266-26","note":"cited on OCN as enabling tokenized collateral"}
+  ]}
+ ]
+}
