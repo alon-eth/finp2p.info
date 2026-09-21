@@ -29,7 +29,7 @@ label.chk{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:va
 .pill{display:inline-block;padding:2px 8px;border-radius:999px;font:500 11px var(--mono);border:1px solid var(--line);color:var(--muted);margin:2px 4px 2px 0}
 .pill.prod{border-color:var(--accent);color:var(--accent)}.pill.prop{border-color:var(--c-issuer);color:var(--c-issuer)}
 .panel ul{padding-left:16px;margin:6px 0;color:var(--muted)}.panel li{margin:3px 0}.panel li b{color:var(--ink);font-weight:600}
-.panel a{color:var(--accent)}
+.panel a{color:var(--accent)}.tbl a.app{color:inherit;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}.tbl a.app:hover{color:var(--accent);text-decoration-color:var(--accent)}
 .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-top:10px}.key{display:flex;gap:28px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}.kg{display:flex;gap:14px;flex-wrap:wrap;align-items:center}.kg b{color:var(--faint);font:600 11px var(--sans);letter-spacing:.1em;text-transform:uppercase;margin-right:2px}.kg span{display:inline-flex;align-items:center;gap:7px}.kg svg{flex:none;color:var(--muted)}.fstools .legend{font-size:11.5px;gap:8px 12px}
 .legend span{display:inline-flex;align-items:center;gap:6px}.dot{width:11px;height:11px;border-radius:50%;display:inline-block}
 .rules{margin-top:10px}details{border:1px solid var(--line);border-radius:8px;background:var(--paper);padding:0 16px;margin:8px 0}
@@ -248,16 +248,17 @@ function setPressed(id){['lyLanes','lyForce','lyInst'].forEach(i=>document.getEl
 [kindSel,roleSel,statSel,ov,ikSel,allLinksEl].forEach(el=>el.addEventListener('change',refresh));showInstEl.addEventListener('change',()=>{applyInstForce();refresh();});q.addEventListener('input',refresh);
 layoutLanes();refresh();
 // institutions table
+const appLink=n=>n.url?`<a class="app" href="${n.url}" target="_blank" rel="noopener">${n.name}</a>`:n.name;
 const itable=document.getElementById('itable'),tq=document.getElementById('tq'),tpub=document.getElementById('tpub');
 function srcClass(i){return !i.public?'internal':(i.refs.every(r=>r==='store')?'store':'public')}
 function renderITable(){const k=tkSel.value,t=tq.value.trim().toLowerCase(),pb=tpub.value;const rows=insts.filter(i=>(!k||i.kind===k)&&(!t||i.name.toLowerCase().includes(t))&&(!pb||srcClass(i)===pb)).sort((a,b)=>a.kind.localeCompare(b.kind)||a.name.localeCompare(b.name));
-  itable.innerHTML='<thead><tr><th>Institution</th><th>Kind</th><th>Attached to</th><th>Sources</th></tr></thead><tbody>'+rows.map(i=>{const ls=ilinks.filter(l=>l.source.id===i.id);return `<tr><td><b style="color:${css(IKC[i.kind]||'--c-other')}">■</b> ${i.name}</td><td>${IK[i.kind]||i.kind}</td><td>${ls.map(l=>l.target.name).join(', ')}</td><td>${refHtml(i.refs)}</td></tr>`}).join('')+'</tbody>';}
+  itable.innerHTML='<thead><tr><th>Institution</th><th>Kind</th><th>Attached to</th><th>Sources</th></tr></thead><tbody>'+rows.map(i=>{const ls=ilinks.filter(l=>l.source.id===i.id);return `<tr><td><b style="color:${css(IKC[i.kind]||'--c-other')}">■</b> ${i.name}</td><td>${IK[i.kind]||i.kind}</td><td>${ls.map(l=>appLink(l.target)).join(', ')}</td><td>${refHtml(i.refs)}</td></tr>`}).join('')+'</tbody>';}
 tkSel.addEventListener('change',renderITable);tq.addEventListener('input',renderITable);tpub.addEventListener('change',renderITable);renderITable();
 // sources table
 (function(){const cnt={};insts.forEach(i=>i.refs.forEach(r=>{(cnt[r]=cnt[r]||[]).push(i.name)}));const order=Object.keys(SRC).sort((a,b)=>(cnt[b]||[]).length-(cnt[a]||[]).length);document.getElementById('stable').innerHTML='<thead><tr><th>Source</th><th>Publisher · date</th><th>Cited by</th></tr></thead><tbody>'+order.filter(r=>(cnt[r]||[]).length).map(r=>{const sd=SRC[r];const names=cnt[r];return `<tr><td>${sd.url?`<a href="${sd.url}" target="_blank" rel="noopener">${sd.title}</a>`:sd.title}</td><td class="src">${sd.pub} · ${sd.date}</td><td>${names.length}: ${names.join(', ')}</td></tr>`}).join('')+'</tbody>'})();
 // matrix
 const TYPES=[...new Set(G.nodes.flatMap(n=>n.types))].sort();
 const m=document.getElementById('matrix');
-m.innerHTML='<thead><tr><th>App</th><th>Status</th>'+TYPES.map(t=>`<th class="rot"><span>${t}</span></th>`).join('')+'</tr></thead><tbody>'+G.nodes.filter(n=>n.role!=='license').sort((a,b)=>a.lane-b.lane||a.name.localeCompare(b.name)).map(n=>`<tr><td><b style="color:${color(n.role)}">●</b> ${n.name}</td><td class="pill-cell"><span class="pill ${n.status==='production'?'prod':n.status==='proposed'?'prop':''}">${n.status}</span></td>`+TYPES.map(t=>n.primaryTypes.includes(t)?'<td class="y">●</td>':n.types.includes(t)?'<td class="s">○</td>':'<td></td>').join('')+'</tr>').join('')+'</tbody>';
+m.innerHTML='<thead><tr><th>App</th><th>Status</th>'+TYPES.map(t=>`<th class="rot"><span>${t}</span></th>`).join('')+'</tr></thead><tbody>'+G.nodes.filter(n=>n.role!=='license').sort((a,b)=>a.lane-b.lane||a.name.localeCompare(b.name)).map(n=>`<tr><td><b style="color:${color(n.role)}">●</b> ${appLink(n)}</td><td class="pill-cell"><span class="pill ${n.status==='production'?'prod':n.status==='proposed'?'prop':''}">${n.status}</span></td>`+TYPES.map(t=>n.primaryTypes.includes(t)?'<td class="y">●</td>':n.types.includes(t)?'<td class="s">○</td>':'<td></td>').join('')+'</tr>').join('')+'</tbody>';
 })();
 </script>
