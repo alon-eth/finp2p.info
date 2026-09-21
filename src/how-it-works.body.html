@@ -178,7 +178,7 @@ td:first-child{white-space:nowrap;font-family:var(--mono);font-size:12.5px}
 <tr><td>Adapter</td><td>Code the institution runs beside its Router: ledger, custody, payment or data. Speaks a fixed API; the Router never sees the ledger directly.</td><td>EVM adapter, our LunarCrush data adapter</td></tr>
 </table>
 
-<h2>4. Where our data utility plugs in</h2>
+<h2>4. Example: where our data utility plugs in</h2>
 <p>A data provider is just another adapter, on the provider's side rather than the consumer's. It answers pull and subscribe requests and pushes items into a Router's ingest endpoint. That Router can then re-share the feed to peers under an access list, so one adapter serves the whole network.</p>
 <figure>
 <svg viewBox="0 0 1000 200" role="img" aria-label="LunarCrush API feeds the data adapter, which pushes into the provider Router's ingest endpoint; the provider Router re-shares to peer Routers, whose apps read the data through GraphQL.">
