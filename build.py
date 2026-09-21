@@ -23,7 +23,14 @@ a{color:var(--accent)}
 .themebtn{background:transparent;border:1px solid var(--line);color:var(--muted);width:34px;height:30px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}.themebtn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .ic-sun{display:none}:root[data-theme="dark"] .ic-moon{display:none}:root[data-theme="dark"] .ic-sun{display:inline}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .ic-moon{display:none}:root:not([data-theme="light"]) .ic-sun{display:inline}}
-@media (max-width:860px){.site-nav ul{display:none}}
+.navtoggle{display:none;background:transparent;border:1px solid var(--line);color:var(--muted);width:34px;height:30px;border-radius:6px;cursor:pointer;align-items:center;justify-content:center}.navtoggle svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+@media (max-width:860px){.navtoggle{display:inline-flex}.site-nav .in{gap:10px}
+ .site-nav ul{display:none;position:absolute;left:0;right:0;top:58px;flex-direction:column;gap:0;background:var(--ground);border-bottom:1px solid var(--line);padding:4px 20px 16px;box-shadow:0 12px 24px rgba(0,0,0,.10)}
+ .site-nav.open ul{display:flex}
+ .site-nav ul a{display:block;padding:12px 0;border-bottom:1px solid var(--line);font-size:15px}
+ .site-nav ul li:last-child a{border-bottom:0}.site-nav ul li.cta{margin:12px 0 0}
+ .site-nav ul a.navbtn{display:block;text-align:center;border-bottom:0;padding:11px 13px}}
+@media (max-width:560px){.brand small{display:none}}
 .site-foot{border-top:1px solid var(--line);margin-top:56px;padding:28px 20px 40px;font-size:12.5px;color:var(--faint)}.site-foot .in{max-width:1240px;margin:0 auto;display:flex;gap:20px;flex-wrap:wrap;justify-content:space-between}
 .site-foot a{color:var(--muted)}
 .page{max-width:900px;margin:0 auto;padding-block:44px 20px;padding-inline:20px}.page.wide{max-width:1240px}
@@ -43,17 +50,49 @@ p{max-width:68ch;color:var(--muted);margin:10px 0}p strong,li strong{color:var(-
 """
 FONTS='<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">'
 THEME_JS="<script>(function(){try{var t=localStorage.getItem('f2p-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>"
+NAV_JS="""<script>(function(){var n=document.getElementById('sitenav'),b=document.getElementById('navtoggle');function set(o){n.classList.toggle('open',o);b.setAttribute('aria-expanded',o?'true':'false')}
+b.addEventListener('click',function(){set(!n.classList.contains('open'))});
+n.querySelectorAll('#navmenu a').forEach(function(a){a.addEventListener('click',function(){set(false)})});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false)});})();</script>"""
 TOGGLE="""<button class="themebtn" id="themebtn" aria-label="Toggle theme"><svg class="ic-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="ic-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
 <script>document.getElementById('themebtn').addEventListener('click',function(){var h=document.documentElement,cur=h.getAttribute('data-theme');var dark=cur?cur==='dark':matchMedia('(prefers-color-scheme: dark)').matches;var n=dark?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('f2p-theme',n)}catch(e){}});</script>"""
+LICENSE_URL='https://creativecommons.org/licenses/by/4.0/'
+def jsonld(path,title,desc,img):
+    org={"@type":"Organization","@id":SITE+"/#publisher","name":"Draper Goren Blockchain","url":"https://dgb.vc","sameAs":["https://www.alongoren.com"]}
+    site={"@type":"WebSite","@id":SITE+"/#website","url":SITE+"/","name":"finp2p.info",
+        "description":"An independent, sourced map of Ownera's FinP2P network.","inLanguage":"en","publisher":{"@id":SITE+"/#publisher"}}
+    page={"@type":"WebPage","@id":SITE+path+"#page","url":SITE+path,"name":title,"description":desc,
+        "isPartOf":{"@id":SITE+"/#website"},"primaryImageOfPage":{"@type":"ImageObject","url":img,"width":1200,"height":630},
+        "datePublished":"2026-09-20","dateModified":TODAY,"publisher":{"@id":SITE+"/#publisher"},
+        "license":LICENSE_URL,"isAccessibleForFree":True}
+    g=[org,site,page]
+    if path!='/':
+        label=dict(NAV+[('/build/','Build with us')]).get(path,title)
+        g.append({"@type":"BreadcrumbList","itemListElement":[
+            {"@type":"ListItem","position":1,"name":"Home","item":SITE+"/"},
+            {"@type":"ListItem","position":2,"name":label,"item":SITE+path}]})
+    if path in ('/','/sources/'):
+        g.append({"@type":"Dataset","@id":SITE+"/#dataset","name":"finp2p.info FinP2P network graph",
+            "description":f"Machine-readable graph of Ownera's FinP2P network: {len(APPS)} SuperApps, derived app-to-app connections with their reasons, {len(insts)} publicly sourced institutions and the source documents behind them.",
+            "url":SITE+"/sources/","license":LICENSE_URL,"creator":{"@id":SITE+"/#publisher"},
+            "isAccessibleForFree":True,"keywords":["FinP2P","Ownera","tokenization","real-world assets","RWA","SuperApps"],
+            "temporalCoverage":DATA_DATE,"dateModified":DATA_DATE,
+            "distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":SITE+"/data/graph.json"}]})
+    return '<script type="application/ld+json">'+json.dumps({"@context":"https://schema.org","@graph":g})+'</script>'
 def chrome(path,title,desc,body,extra_head='',wide=False,og_type='website'):
+    img=f"{SITE}/og/{path.strip('/').replace('/','-') or 'home'}.png"
     nav=''.join(f'<li><a href="{p}"{" class=\"on\"" if p==path else ""}>{n}</a></li>' for p,n in NAV)+f'<li class="cta"><a href="/build/" class="navbtn{" on" if path=="/build/" else ""}">Build with us</a></li>'
     return f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{html.escape(title)}</title><meta name="description" content="{html.escape(desc)}"><link rel="canonical" href="{SITE}{path}">
-<meta property="og:type" content="{og_type}"><meta property="og:site_name" content="finp2p.info"><meta property="og:title" content="{html.escape(title)}"><meta property="og:description" content="{html.escape(desc)}"><meta property="og:url" content="{SITE}{path}"><meta property="og:image" content="{SITE}/og.png"><meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml"><meta name="theme-color" content="#0F1413">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1"><meta name="author" content="Draper Goren Blockchain">
+<meta property="og:type" content="{og_type}"><meta property="og:site_name" content="finp2p.info"><meta property="og:locale" content="en_US"><meta property="og:title" content="{html.escape(title)}"><meta property="og:description" content="{html.escape(desc)}"><meta property="og:url" content="{SITE}{path}"><meta property="og:image" content="{img}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="{html.escape(title)} - finp2p.info">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{html.escape(title)}"><meta name="twitter:description" content="{html.escape(desc)}"><meta name="twitter:image" content="{img}">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="alternate" type="application/json" href="{SITE}/data/graph.json" title="finp2p.info network graph">
+<meta name="theme-color" content="#F6F4EE" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0F1413" media="(prefers-color-scheme: dark)">
+{jsonld(path,title,desc,img)}
 {FONTS}{THEME_JS}<style>{BASE_CSS}</style>{extra_head}</head>
-<body><nav class="site-nav"><div class="in"><a class="brand" href="/">FinP2P<b>.info</b><small>independent network map</small></a><ul>{nav}</ul>{TOGGLE}</div></nav>
+<body><nav class="site-nav" id="sitenav"><div class="in"><a class="brand" href="/">FinP2P<b>.info</b><small>independent network map</small></a><ul id="navmenu">{nav}</ul><span style="display:flex;gap:8px">{TOGGLE}<button class="navtoggle" id="navtoggle" aria-label="Menu" aria-expanded="false" aria-controls="navmenu"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button></span></div></nav>{NAV_JS}
 {body}
 <footer class="site-foot"><div class="in" style="display:block;max-width:900px">
 <p style="color:var(--ink);font-weight:600;margin:0 0 8px">Independence and disclosure</p>
@@ -75,8 +114,13 @@ def write(path,content):
 # ---------- data prep
 nodes=[n for n in G['nodes'] if n['role']!='license']; apps_by=dict((a['slug'],a) for a in APPS)
 SOURCES=G['sources']
-HIDDEN={i['name'] for i in G['institutions'] if not i.get('public')}   # unconfirmed (private materials only): hidden from pages for now
+PUBLIC=json.loads(json.dumps(G))   # public-safe snapshot: the only version that is ever written to dist/
+PRIV=json.load(open(DATA/'private.json')) if (DATA/'private.json').exists() else None
+if PRIV:   # local-only records with no public source: merged for our own reading, never published
+    G['institutions']+=PRIV['institutions']; G['instEdges']+=PRIV['instEdges']; G['sources'].update(PRIV['sources'])
+HIDDEN={i['name'] for i in G['institutions'] if not i.get('public')}   # unconfirmed (private materials only): hidden from pages
 insts=[i for i in G['institutions'] if i['name'] not in HIDDEN]; iedges=[e for e in G['instEdges'] if e['inst'] not in HIDDEN]
+assert not [i for i in PUBLIC['institutions'] if not i.get('public')], 'unsourced records in data/graph.json: move them to data/private.json'
 prod=sum(1 for a in APPS if a['status']=='production'); sand=sum(1 for a in APPS if a['status']=='sandbox'); dev=sum(1 for a in APPS if a['status']=='development')
 public=sum(1 for i in insts if i.get('public')); companies=len(set(a.get('companyName') for a in APPS if a.get('companyName')))
 def refs(rs):
@@ -117,25 +161,26 @@ body=body.replace('<div class="wrap">','<div class="wrap page">',1)
 write('/how-it-works/',chrome('/how-it-works/','How FinP2P works','How Ownera\'s FinP2P network works: Routers inside each institution, peer-to-peer orchestration, one transaction end to end, and where data utilities plug in.',body,extra_head=head))
 # ---------- map
 t,head,body=hoist(SRC/'map.body.html')
-# hide unconfirmed institutions inside the map's embedded dataset and copy
+# the map embeds its own dataset: re-emit it from the public-safe snapshot so nothing unsourced can ride along
 m=re.search(r'<script id="data" type="application/json">(.*?)</script>',body,flags=re.S)
 MG=json.loads(m.group(1).replace('<\\/script','</script'))
-MG['institutions']=[i for i in MG['institutions'] if i['name'] not in HIDDEN]; MG['instEdges']=[e for e in MG['instEdges'] if e['inst'] not in HIDDEN]
-for k in ('internal','nasdaq-vx'): MG['sources'].pop(k,None)
+for k in ('nodes','edges','overlay','institutions','instEdges','sources'):
+    if k in PUBLIC: MG[k]=PUBLIC[k]
 body=body[:m.start(1)]+json.dumps(MG).replace('</script','<\\/script')+body[m.end(1):]
-body=body.replace('<option value="internal">Internal only, unconfirmed</option>','')
-body=re.sub(r' <strong>Internal</strong> means it appears only in Ownera investor materials we hold and no public confirmation was found; three institutions are in that state and are marked \(Tradeweb, GLMX, Nasdaq\)\.','',body)
-body=body.replace(", <strong id=\"pcount\"></strong> of them with a public source cited.",", each with a public source cited.").replace("r==='internal'?'internal, unconfirmed':","").replace("document.getElementById('pcount').textContent=insts.filter(i=>i.public).length;","")
+body=body.replace('All <strong>35 SuperApps</strong>',f'All <strong>{len(APPS)} SuperApps</strong>')
 write('/map/',chrome('/map/','FinP2P SuperApp map','Interactive map of every SuperApp on Ownera\'s store, their derived connections, and the institutions attached to each, with sources.',body,extra_head=head,wide=True))
 # ---------- apps
 rows=[]
 for a in sorted(APPS,key=lambda a:(a['status']!='production',a['status']!='sandbox',a['name'])):
     pc=[c['name'] for c in a['categories'] if c['is_primary'] and c['name']!='Featured SuperApps']; pt=[x['name'] for x in a['types'] if x['is_primary']]
     st=a['status']; pill=f'<span class="pill{" prod" if st=="production" else ""}">{st}</span>'
-    rows.append(f'<tr id="{a["slug"]}"><td><b>{html.escape(a["name"])}</b><br><span style="color:var(--muted);font-size:12.5px">{html.escape(a.get("companyName") or "")}</span></td><td>{pill}</td><td>{"".join(f"<span class=pill>{html.escape(c)}</span>" for c in pc)}</td><td style="max-width:360px">{html.escape((a.get("orchestration") or a.get("shortDescription") or "").strip()[:220])}</td><td style="font-size:12.5px;color:var(--muted)">{html.escape(", ".join(pt))}</td><td><a href="https://superapps.ownera.io/app/{a["slug"]}" target="_blank" rel="noopener">listing ↗</a></td></tr>')
+    orch=(a.get("orchestration") or a.get("shortDescription") or "").strip()
+    if len(orch)>260: orch=orch[:260].rsplit(' ',1)[0].rstrip(' ,;:.')+'…'
+    rows.append(f'<tr id="{a["slug"]}"><td><b>{html.escape(a["name"])}</b><br><span style="color:var(--muted);font-size:12.5px">{html.escape(a.get("companyName") or "")}</span></td><td>{pill}</td><td>{"".join(f"<span class=pill>{html.escape(c)}</span>" for c in pc)}</td><td>{html.escape(orch)}</td><td class="serves">{html.escape(", ".join(pt))}</td><td><a href="https://superapps.ownera.io/app/{a["slug"]}" target="_blank" rel="noopener">listing&nbsp;↗</a></td></tr>')
+APPS_CSS='<style>table.apps{table-layout:fixed}table.apps td.serves{font-size:12.5px;color:var(--muted)}@media (max-width:900px){table.apps{table-layout:auto;min-width:880px}}</style>'
 apps_page=f"""<main class="page wide"><div class="eyebrow">Catalog</div><h1>Every SuperApp on the store</h1><p class="lede">{len(APPS)} apps from {companies} companies: {prod} in production, {sand} in sandbox, {dev} in development. Pulled from the store's public API on {DATA_DATE}. Our proposed <a href="https://www.alongoren.com/superapp/">Social and Market Data SuperApp</a> is not yet listed and is not counted here.</p>
-<div class="tbl"><table><thead><tr><th>App</th><th>Status</th><th>Category</th><th>What it orchestrates</th><th>Serves</th><th></th></tr></thead><tbody>{''.join(rows)}</tbody></table></div></main>"""
-write('/apps/',chrome('/apps/','FinP2P SuperApp catalog','All 35 SuperApps on Ownera\'s store with status, company, category, orchestration and participant types.',apps_page,wide=True))
+<div class="tbl"><table class="apps"><colgroup><col style="width:16%"><col style="width:8%"><col style="width:17%"><col style="width:32%"><col style="width:20%"><col style="width:7%"></colgroup><thead><tr><th>App</th><th>Status</th><th>Category</th><th>What it orchestrates</th><th>Serves</th><th></th></tr></thead><tbody>{''.join(rows)}</tbody></table></div>{APPS_CSS}</main>"""
+write('/apps/',chrome('/apps/','FinP2P SuperApp catalog',f'All {len(APPS)} SuperApps on Ownera\'s store with status, company, category, orchestration and participant types.',apps_page,wide=True))
 # ---------- institutions
 KIND={'bank':'Bank','asset manager':'Asset manager','market infrastructure':'Market infrastructure','custody tech':'Custody tech','stablecoin / payments':'Stablecoin / payments','data':'Data','technology':'Technology','fund services':'Fund services','real estate':'Real estate'}
 byname={i['name']:i for i in insts}; name_by_slug={n['id']:n['name'] for n in G['nodes']}
@@ -157,11 +202,12 @@ for i in insts:
 srows=''.join(f'<tr><td>{f"<a href=\"{s["url"]}\" target=\"_blank\" rel=\"noopener\">{html.escape(s["title"])}</a>" if s["url"] else html.escape(s["title"])}</td><td style="white-space:nowrap;color:var(--muted);font-size:12.5px">{html.escape(s["pub"])}<br>{s["date"]}</td><td style="font-size:12.5px">{len(cnt[r])}: {html.escape(", ".join(cnt[r]))}</td></tr>' for r,s in sorted(SOURCES.items(),key=lambda kv:-len(cnt.get(kv[0],[]))) if cnt.get(r))
 src_page=f"""<main class="page wide"><div class="eyebrow">Evidence</div><h1>Sources</h1><p class="lede">Every document cited on this site, once, with the institutions that rely on it. Dates are the document's own. Ownera's <a href="https://www.ownera.io/news">news page</a> indexes its partnership announcements; the <a href="https://ocn.ownera.io/">Open Collateral Network</a> site hosts the full industry reports.</p>
 <div class="tbl"><table><thead><tr><th>Source</th><th>Publisher · date</th><th>Cited by</th></tr></thead><tbody>{srows}</tbody></table></div>
+<h2>Use the data</h2><p>The whole model behind this site is one file: <a href="/data/graph.json">graph.json</a> (apps, derived connections with their reasons, institutions with references, and every source). It is published under <a href="https://creativecommons.org/licenses/by/4.0/" rel="license">CC BY 4.0</a>, so you may reuse it anywhere with attribution to finp2p.info. Records we cannot tie to a public document are not in it.</p>
 <h2>How the app-to-app connections were derived</h2><p>Ownera does not publish app-to-app links. The map derives them from each app's category, participant types and stated orchestration using ten explicit rules, listed at the bottom of the <a href="/map/">map page</a>. They are our reading of the listings, not an Ownera statement.</p></main>"""
 write('/sources/',chrome('/sources/','Sources','Every public document behind finp2p.info, with the institutions that cite it.',src_page,wide=True))
 # ---------- about
 about=f"""<main class="page"><div class="eyebrow">About</div><h1>An independent reference for the FinP2P network.</h1>
-<p class="lede">finp2p.info is maintained by Alon Goren and the venture studio at <a href="https://dgb.vc">Draper Goren Blockchain</a>. Our founding partner, Alon Goren, is on the board of Ownera. Draper Goren Holm, a fund he manages, is an investor in Ownera. He also sits on the board of LunarCrush. That is why the site exists, and it is why every claim on it cites a public source.</p>
+<p class="lede">finp2p.info is maintained by Alon Goren, founding partner of the venture studio at <a href="https://dgb.vc">Draper Goren Blockchain</a>. He is on the board of Ownera, and of LunarCrush; Draper Goren Holm, a fund he manages, is an investor in Ownera. That is why the site exists, and it is why every claim on it cites a public source.</p>
 <div class="note"><strong>This site is not an Ownera property.</strong> It is not operated, sponsored, reviewed or endorsed by Ownera or XCap Ecosystem Ltd, and Ownera has no editorial input. Where the site describes Ownera's plans it quotes or links Ownera's own public material. Where it draws connections between apps, those are our inferences from public listings and are labelled as such.</div>
 <h2>What the site is</h2><p>A map of the FinP2P network built from public data: Ownera's SuperApps store and its JSON API, Ownera's developer documentation, the GDF and ISDA industry reports, Ownera's press announcements and Open Collateral Network site, and the app vendors' own pages. Where we add our own reading, such as the derived app-to-app connections, the page says so and shows the rules.</p>
 <h2>What it is not</h2><p>Not an Ownera property, not reviewed or endorsed by Ownera, and not a statement that any named institution transacts on FinP2P in production unless the cited source says so. Institutions we cannot tie to a public source are not listed.</p>
@@ -251,9 +297,12 @@ fetch('/api/contact/',{{method:'POST',headers:{{'Content-Type':'application/json
 write('/build/',chrome('/build/','Build on FinP2P with Draper Goren Blockchain','For SuperApp builders, founders planning to build for the FinP2P network, and institutions on it: who DGB is and how to reach us.',build_page))
 # ---------- static
 shutil.copy(SRC/'og.png',DIST/'og.png')
+(DIST/'og').mkdir(exist_ok=True)
+for p in sorted((SRC/'og').glob('*.png')): shutil.copy(p,DIST/'og'/p.name)
 (DIST/'favicon.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#0F1413"/><circle cx="20" cy="32" r="6" fill="#3ED08F"/><circle cx="44" cy="20" r="6" fill="#EEF1EE"/><circle cx="44" cy="44" r="6" fill="#EEF1EE"/><path d="M26 32h12M26 30l12-8M26 34l12 8" stroke="#3ED08F" stroke-width="3" fill="none"/></svg>')
 (DIST/'robots.txt').write_text(f'User-agent: *\nAllow: /\nSitemap: {SITE}/sitemap.xml\n')
-(DIST/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+''.join(f'<url><loc>{SITE}{p}</loc><lastmod>{TODAY}</lastmod></url>' for p,_ in NAV+[('/build/','Build with us')])+'</urlset>')
+PRIORITY={'/':'1.0','/map/':'0.9','/how-it-works/':'0.9','/network/':'0.8','/apps/':'0.8','/institutions/':'0.8','/sources/':'0.7','/build/':'0.6','/about/':'0.5'}
+(DIST/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+''.join(f'<url><loc>{SITE}{p}</loc><lastmod>{TODAY}</lastmod><changefreq>weekly</changefreq><priority>{PRIORITY.get(p,"0.5")}</priority></url>' for p,_ in NAV+[('/build/','Build with us')])+'</urlset>')
 (DIST/'llms.txt').write_text(f"""# finp2p.info
 
 > Independent, sourced map of Ownera's FinP2P network: every SuperApp on the store ({len(APPS)}, {prod} in production), {len(insts)} named institutions and partners (all with public sources), how a transaction moves, and where data utilities plug in. Maintained by the Draper Goren Blockchain venture studio; not affiliated with Ownera. Data as of {DATA_DATE}.
@@ -271,7 +320,14 @@ shutil.copy(SRC/'og.png',DIST/'og.png')
 - Live production: intraday repo between J.P. Morgan and HQLAx since 2025, up to $1B a day, $5B first month (HQLAx press, Aug 2025).
 - Ownera's Open Collateral Network site names Goldman Sachs, Apex, Archax and DTCC as coming soon; pilots Sept 2026, production Q4 2026.
 - App-to-app connections on the map are derived by stated rules, not published by Ownera.
-- Machine-readable data: {SITE}/data/graph.json
+- Machine-readable data: {SITE}/data/graph.json ({len(insts)} institutions, {len(G['edges'])} derived app-to-app edges, {len(PUBLIC['sources'])} sources), licensed CC BY 4.0. Attribute to finp2p.info.
+- Every institution in the published data has a public source; records without one are held back, not published.
+
+## Citation
+finp2p.info, "{{page title}}", Draper Goren Blockchain, data snapshot {DATA_DATE}. {SITE}/
 """)
-shutil.copy(DATA/'graph.json',DIST/'data.json'); (DIST/'data').mkdir(exist_ok=True); shutil.copy(DATA/'graph.json',DIST/'data'/'graph.json'); shutil.copy(DATA/'apps.json',DIST/'data'/'apps.json')
+(DIST/'data').mkdir(exist_ok=True)
+PUBLIC['license']=LICENSE_URL; PUBLIC['attribution']='finp2p.info, Draper Goren Blockchain'
+PUBLIC['homepage']=SITE+'/'; PUBLIC['built']=TODAY
+GJ=json.dumps(PUBLIC); (DIST/'data.json').write_text(GJ); (DIST/'data'/'graph.json').write_text(GJ); shutil.copy(DATA/'apps.json',DIST/'data'/'apps.json')
 print('done')

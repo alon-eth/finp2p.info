@@ -7,7 +7,7 @@ SRC="$(cd "$(dirname "$0")" && pwd)"
 CLONE="$HOME/code/finp2p.info"
 MSG="${1:-update $(date +%F)}"
 [ -d "$CLONE/.git" ] || git clone -q https://github.com/alon-eth/finp2p.info.git "$CLONE"
-rsync -a --delete --exclude dist --exclude __pycache__ --exclude .git --exclude .vercel "$SRC/" "$CLONE/"
+rsync -a --delete --exclude dist --exclude __pycache__ --exclude .git --exclude .vercel --exclude "data/private.json" "$SRC/" "$CLONE/"
 if [ -n "$(git -C "$CLONE" status --porcelain)" ]; then
   git -C "$CLONE" add -A
   git -C "$CLONE" -c user.name="Alon Goren" -c user.email="alon@dgb.vc" commit -q -m "$MSG"
