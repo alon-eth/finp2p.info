@@ -93,7 +93,7 @@ home=f"""<main class="page">
 <div class="eyebrow">Ownera's FinP2P network, mapped and sourced</div>
 <h1>The network that connects the whole RWA ecosystem.</h1>
 <p class="lede">FinP2P is the application layer that lets banks, venues, custodians and issuers move tokenized assets and cash between each other without integrating one by one. This site is an independent map of it: every SuperApp on the store, the institutions attached to each, how a transaction moves, and a public source for every claim.</p>
-<div class="stats"><div class="stat"><b>{len(APPS)}</b><span>SuperApps on the store</span></div><div class="stat"><b>{prod}</b><span>in production</span></div><div class="stat"><b>{len(insts)}</b><span>named institutions and partners</span></div><div class="stat"><b>{public}</b><span>with a public source</span></div><div class="stat"><b>$5B+</b><span>monthly volume, JPM and HQLAx repo</span></div></div>
+<div class="stats"><div class="stat"><b>{len(APPS)}</b><span>SuperApps on the store</span></div><div class="stat"><b>{prod}</b><span>in production</span></div><div class="stat"><b>{len(insts)}</b><span>named institutions and partners</span></div><div class="stat"><b>$5B+</b><span>monthly volume, JPM and HQLAx repo</span></div></div>
 <div class="cards">
 <a class="card" href="/network/"><h3>Every connected piece</h3><p>Ownera's own picture of the network with every real name filled in: counterparties, apps, chains, standards, cash rails, custody, platforms.</p></a>
 <a class="card" href="/how-it-works/"><h3>How it works</h3><p>Three diagrams: the shape of the network, one transaction end to end, and where a data utility plugs in.</p></a>
