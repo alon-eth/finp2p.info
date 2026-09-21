@@ -33,8 +33,7 @@ cd dist && python3 -m http.server 4190   # http://localhost:4190/
 
 Vercel project `finp2p-info` serves finp2p.info (`vercel.json` sets the build command and output
 directory). DNS: GoDaddy, `A @ 76.76.21.21` and `CNAME www cname.vercel-dns.com`; www redirects to
-the apex. Deploy with `vercel deploy --prod` from a checkout, or connect the repository in the Vercel
-dashboard so every push to `main` deploys on its own.
+the apex. The repository is connected to Vercel, so every push to `main` deploys on its own.
 
 ## Corrections and contributions
 

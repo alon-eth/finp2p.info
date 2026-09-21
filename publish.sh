@@ -1,7 +1,7 @@
 #!/bin/bash
 # Publish finp2p.info: sync this working copy to the public repo clone, commit, push, deploy.
-# The public repo (github.com/alon-eth/finp2p.info) is what Vercel serves. Until the Vercel GitHub
-# app is installed for alon-eth, the deploy step here is what ships; after that, the push alone does.
+# The public repo (github.com/alon-eth/finp2p.info) is what Vercel serves: every push to main deploys
+# (GitHub app connected 2026-09-21). Pass DEPLOY=1 to also force a CLI deploy.
 set -e
 SRC="$(cd "$(dirname "$0")" && pwd)"
 CLONE="$HOME/code/finp2p.info"
@@ -17,4 +17,4 @@ if [ -n "$(git -C "$CLONE" status --porcelain)" ]; then
 else
   echo "nothing to push"
 fi
-(cd "$CLONE" && vercel deploy --prod --yes --scope alon-6353s-projects 2>&1 | tail -1)
+if [ "${DEPLOY:-0}" = "1" ]; then (cd "$CLONE" && vercel deploy --prod --yes --scope alon-6353s-projects 2>&1 | tail -1); else echo "Vercel deploys from GitHub; watch: vercel ls finp2p-info --scope alon-6353s-projects"; fi
