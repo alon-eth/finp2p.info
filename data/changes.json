@@ -1,0 +1,35 @@
+{
+ "note": "Changelog for finp2p.info. Newest first. kind: network (something changed on FinP2P itself) or site (something changed here). Every network entry carries a public source.",
+ "entries": [
+  {
+   "date": "2026-10-13",
+   "kind": "network",
+   "title": "Utila partners with Ownera",
+   "body": "Ownera announced a partnership with Utila, pairing Utila's wallet infrastructure and transaction governance with the FinP2P network and SuperApps platform. Added to the custody layer on the network page.",
+   "url": "https://www.ownera.io/news/utila-ownera-partnership",
+   "link": "/network/#layer:custody:Utila"
+  },
+  {
+   "date": "2026-10-13",
+   "kind": "network",
+   "title": "Store re-checked: no listing changes",
+   "body": "Re-pulled the SuperApps store API. Still 35 apps, 15 in production, with no new listings, removals or status changes since the 20 September snapshot.",
+   "url": "https://superapps.ownera.io/",
+   "link": "/apps/"
+  },
+  {
+   "date": "2026-10-13",
+   "kind": "site",
+   "title": "Developer guide, agent guide, FAQ and search",
+   "body": "New pages: a community field guide to building on FinP2P, a guide for AI agents and LLMs (including Ownera's docs MCP server), an FAQ, site search and this changelog with an RSS feed. Plain-text versions at /llms.txt and /llms-full.txt.",
+   "link": "/developers/"
+  },
+  {
+   "date": "2026-09-21",
+   "kind": "site",
+   "title": "finp2p.info launches",
+   "body": "An independent, sourced map of the FinP2P network: every SuperApp on the store, the institutions attached to each, how a transaction moves, and a public source for every claim.",
+   "link": "/"
+  }
+ ]
+}
