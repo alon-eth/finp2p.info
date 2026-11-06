@@ -1,0 +1,518 @@
+{
+ "note": "Privacy preview data for finp2p.info. Local only until launch (preview/ is excluded from publish.sh). Every row cites a public source. Status as of the snapshot date. Fees are typical network fees for one token transfer from a live snapshot, not quotes.",
+ "snapshot": "2026-11-06",
+ "paper_url": "https://143965173.fs1.hubspotusercontent-eu1.net/hubfs/143965173/External%20Share/Ownera_Multi-Chain_Need-to-Know_Privacy_White_Paper.pdf",
+ "paper_title": "Multi-Chain Need-to-Know Privacy (Ownera white paper, v1.2, October 2026)",
+ "sources": {
+  "esma-mev": {
+   "title": "Maximal Extractable Value: Implications for crypto markets",
+   "pub": "ESMA",
+   "date": "2025-07",
+   "url": "https://www.esma.europa.eu/sites/default/files/2025-07/ESMA50-481369926-29744_Maximal_Extractable_Value_Implications_for_crypto_markets.pdf"
+  },
+  "sec-atkins": {
+   "title": "Remarks at the Crypto Task Force roundtable on financial surveillance and privacy",
+   "pub": "SEC, Chairman Paul Atkins",
+   "date": "2025-12-15",
+   "url": "https://www.sec.gov/newsroom/speeches-statements/atkins-121525-remarks-crypto-task-force-roundtable-financial-surveillance-privacy"
+  },
+  "bis-agora": {
+   "title": "Project Agora: shared programmable platform for wholesale cross-border payments",
+   "pub": "BIS",
+   "date": "2026-05",
+   "url": "https://www.bis.org/publications/project-agora-shared-programmable-platform-wholesale-cross-border-payments.pdf"
+  },
+  "jpm-epic": {
+   "title": "Project EPIC: institutional-grade privacy for tokenization",
+   "pub": "Kinexys by J.P. Morgan",
+   "date": "2024-11",
+   "url": "https://www.jpmorgan.com/kinexys/content-hub/project-epic"
+  },
+  "hqlax": {
+   "title": "J.P. Morgan, HQLAx and Ownera launch intraday repo solution with $5bn traded in the first month",
+   "pub": "HQLAx",
+   "date": "2025-08-07",
+   "url": "https://www.hqla-x.com/post/j-p-morgan-hqlax-and-ownera-launch-intraday-repo-solution-with-5bn-traded-in-the-first-month"
+  },
+  "ownera-arch": {
+   "title": "SuperApp architecture",
+   "pub": "Ownera developer docs",
+   "date": "2026",
+   "url": "https://finp2p-docs.ownera.io/docs/superapp-architecture"
+  },
+  "privacy-pools": {
+   "title": "0xbow's Privacy Pools go live on Ethereum",
+   "pub": "The Block",
+   "date": "2025-03",
+   "url": "https://www.theblock.co/post/348959/0xbow-privacy-pools-new-cypherpunk-tool-inspired-research-ethereum-founder-vitalik-buterin"
+  },
+  "eth-privacy": {
+   "title": "Ethereum's privacy commitment",
+   "pub": "Ethereum Foundation",
+   "date": "2025-10-08",
+   "url": "https://blog.ethereum.org/2025/10/08/privacy-commitment"
+  },
+  "polygon-pp": {
+   "title": "Private payments are live on Polygon",
+   "pub": "Polygon",
+   "date": "2026-05-04",
+   "url": "https://polygon.technology/blog/private-payments-are-live-on-polygon"
+  },
+  "solana-pm": {
+   "title": "Post-mortem, June 25 2025 (confidential transfers)",
+   "pub": "Solana",
+   "date": "2025-06",
+   "url": "https://solana.com/news/post-mortem-june-25-2025"
+  },
+  "solana-ct": {
+   "title": "Confidential transfer integration guide",
+   "pub": "Solana docs",
+   "date": "2026",
+   "url": "https://solana.com/docs/tokens/extensions/confidential-transfer/integration-guide"
+  },
+  "agave4": {
+   "title": "Agave v4.0",
+   "pub": "Helius",
+   "date": "2026-06",
+   "url": "https://www.helius.dev/blog/agave-v4-0"
+  },
+  "aztec-alpha": {
+   "title": "Announcing the Alpha Network",
+   "pub": "Aztec",
+   "date": "2026-03",
+   "url": "https://aztec.network/blog/announcing-the-alpha-network"
+  },
+  "prividium": {
+   "title": "Prividium documentation",
+   "pub": "ZKsync",
+   "date": "2026",
+   "url": "https://docs.prividium.zksync.io/"
+  },
+  "hedera-priv": {
+   "title": "Transaction privacy whitepaper",
+   "pub": "Hashgraph",
+   "date": "2026-06",
+   "url": "https://hashgraph.com/wp-content/uploads/2026/06/TransactionPrivacy_Whitepaper_Final.pdf"
+  },
+  "hedera-fees": {
+   "title": "Mainnet fees",
+   "pub": "Hedera docs",
+   "date": "2026",
+   "url": "https://docs.hedera.com/hedera/networks/mainnet/fees"
+  },
+  "stellar-xray": {
+   "title": "Announcing Stellar X-Ray (Protocol 25)",
+   "pub": "Stellar",
+   "date": "2026-01",
+   "url": "https://stellar.org/blog/developers/announcing-stellar-x-ray-protocol-25"
+  },
+  "stellar-meet": {
+   "title": "Developer meeting, 6 August 2026 (confidential tokens on testnet)",
+   "pub": "Stellar",
+   "date": "2026-08-06",
+   "url": "https://developers.stellar.org/meetings/2026/08/06"
+  },
+  "xrpl-cmpt": {
+   "title": "XLS-96: Confidential multi-purpose tokens",
+   "pub": "XRPL Standards",
+   "date": "2026",
+   "url": "https://xls.xrpl.org/xls/XLS-0096-confidential-mpt.html"
+  },
+  "arc-privacy": {
+   "title": "Opt-in privacy (concepts)",
+   "pub": "Arc docs",
+   "date": "2026",
+   "url": "https://docs.arc.io/arc/concepts/opt-in-privacy"
+  },
+  "arc-mainnet": {
+   "title": "Circle launches Arc mainnet",
+   "pub": "The Block",
+   "date": "2026-09-16",
+   "url": "https://www.theblock.co/news/ecosystems/2026-09-16-circle-launches-arc-mainnet-with-blackrock-and-visa-among-validators-mints-10-billion-arc-tokens-415250"
+  },
+  "canton-privacy": {
+   "title": "How Canton Network delivers institutional-grade privacy",
+   "pub": "Canton Network",
+   "date": "2026",
+   "url": "https://www.canton.network/blog/how-canton-network-delivers-institutional-grade-privacy"
+  },
+  "canton-sync": {
+   "title": "Synchronizer overview",
+   "pub": "Canton docs",
+   "date": "2026",
+   "url": "https://docs.canton.network/overview/reference/synchronizer-overview"
+  },
+  "canton-cip": {
+   "title": "Universal Burn CIP (draft)",
+   "pub": "5North, Digital Asset",
+   "date": "2026-10",
+   "url": "https://dach-ny.github.io/universal-burn-cip/"
+  },
+  "besu-tessera": {
+   "title": "Sunsetting Tessera and simplifying Hyperledger Besu",
+   "pub": "LF Decentralized Trust",
+   "date": "2025",
+   "url": "https://www.lfdecentralizedtrust.org/blog/sunsetting-tessera-and-simplifying-hyperledger-besu"
+  },
+  "besu-freegas": {
+   "title": "Configure free gas networks",
+   "pub": "Besu docs",
+   "date": "2026",
+   "url": "https://besu.hyperledger.org/private-networks/how-to/configure/free-gas/"
+  },
+  "fee-eth": {
+   "title": "Gas tracker",
+   "pub": "Etherscan",
+   "date": "2026-10-13",
+   "url": "https://etherscan.io/gastracker"
+  },
+  "fee-base": {
+   "title": "Gas tracker",
+   "pub": "Basescan",
+   "date": "2026-10-13",
+   "url": "https://basescan.org/gastracker"
+  },
+  "fee-stellar": {
+   "title": "Horizon fee stats",
+   "pub": "Stellar",
+   "date": "2026-10-13",
+   "url": "https://horizon.stellar.org/fee_stats"
+  },
+  "fee-xrpl": {
+   "title": "Transaction cost",
+   "pub": "XRPL docs",
+   "date": "2026",
+   "url": "https://xrpl.org/docs/concepts/transactions/transaction-cost"
+  },
+  "euroclear-2025": {
+   "title": "Euroclear delivers strong 2025 results",
+   "pub": "Euroclear",
+   "date": "2026",
+   "url": "https://www.euroclear.com/newsandinsights/en/press/2026/mr-06-euroclear-delivers-strong-2025-results.html"
+  },
+  "pp-v2": {
+   "title": "Privacy Pools v2 goes live with a bigger feature suite",
+   "pub": "Bankless",
+   "date": "2026-10-21",
+   "url": "https://www.bankless.com/read/news/privacy-pools-v2-goes-live-with-bigger-feature-suite"
+  },
+  "oz-stellar": {
+   "title": "stellar-contracts v0.8.0: audited confidential token contracts and circuits",
+   "pub": "OpenZeppelin",
+   "date": "2026-10",
+   "url": "https://github.com/OpenZeppelin/stellar-contracts/releases/tag/v0.8.0"
+  },
+  "stellar-ct": {
+   "title": "Developer preview: confidential tokens on Stellar",
+   "pub": "Stellar",
+   "date": "2026",
+   "url": "https://stellar.org/blog/developers/developer-preview-confidential-tokens-on-stellar"
+  },
+  "xrpl-amend": {
+   "title": "Amendment status (ConfidentialTransfer)",
+   "pub": "XRPScan",
+   "date": "2026-11-06",
+   "url": "https://xrpscan.com/amendments"
+  },
+  "eerc": {
+   "title": "EncryptedERC (eERC): encrypted ERC-20 standard, with audits",
+   "pub": "Ava Labs",
+   "date": "2025-03",
+   "url": "https://github.com/ava-labs/EncryptedERC"
+  },
+  "aptos-capt": {
+   "title": "Aptos Confidential APT",
+   "pub": "CertiK",
+   "date": "2026-08-19",
+   "url": "https://www.certik.com/blog/aptos-confidential-apt"
+  },
+  "aleo-usdcx": {
+   "title": "USDCx on Aleo",
+   "pub": "Aleo",
+   "date": "2026",
+   "url": "https://aleo.org/usdcx/"
+  },
+  "aleo-ct": {
+   "title": "Privacy blockchains get stablecoin access as USDC launches on Aleo",
+   "pub": "Cointelegraph",
+   "date": "2026-01-27",
+   "url": "https://cointelegraph.com/news/privacy-blockchains-stablecoin-access-usdc-aleo"
+  }
+ },
+ "chains": [
+  {
+   "name": "Canton",
+   "kind": "Privacy network",
+   "status": "live",
+   "since": "by design",
+   "model": "Need-to-know by design. Each institution runs its own node; only the nodes in a trade see it, with messages encrypted end to end.",
+   "hides": "Trade content from every node not in the trade.",
+   "visible": "The synchronizer orders encrypted messages and sees metadata, not trade content.",
+   "fee": "about $1",
+   "fee_note": "median transaction, gross, before rewards returned to operators (draft CIP)",
+   "refs": [
+    "canton-privacy",
+    "canton-sync",
+    "canton-cip"
+   ]
+  },
+  {
+   "name": "Ethereum",
+   "kind": "Public L1",
+   "status": "live",
+   "since": "Mar 2025 (v2 Oct 2026)",
+   "model": "Application-level privacy: Privacy Pools (0xbow), a screened shielded pool that added private in-pool payments in its October 2026 v2, plus other shielded pools; the Ethereum Foundation has committed to privacy as a protocol priority.",
+   "hides": "Sender, recipient and amount of transfers inside the pool, and the link between deposit and withdrawal.",
+   "visible": "Deposits into and withdrawals out of the pool; everything outside it is public. A screening provider approves deposits.",
+   "fee": "about $0.02",
+   "fee_note": "token transfer, live snapshot",
+   "refs": [
+    "privacy-pools",
+    "pp-v2",
+    "eth-privacy",
+    "fee-eth"
+   ]
+  },
+  {
+   "name": "Polygon PoS",
+   "kind": "Public chain",
+   "status": "live",
+   "since": "May 2026",
+   "model": "Private payments for stablecoins (USDC and USDT) on the public chain, through Hinkal's shielded pool with screening on every transfer.",
+   "hides": "Sender, receiver and amount; senders and receivers cannot be linked on-chain.",
+   "visible": "That a valid transfer happened.",
+   "fee": "about $0.002",
+   "fee_note": "token transfer, live snapshot",
+   "refs": [
+    "polygon-pp"
+   ]
+  },
+  {
+   "name": "Solana",
+   "kind": "Public L1",
+   "status": "live",
+   "since": "Jun 2026 (returned)",
+   "model": "Confidential transfers in the Token-2022 program, using zero-knowledge proofs. Switched off in June 2025 after a bug in the proofs; back on with Agave 4.0 in June 2026.",
+   "hides": "Token amounts and balances.",
+   "visible": "Sender and receiver addresses.",
+   "fee": "about $0.0005",
+   "fee_note": "token transfer, live snapshot",
+   "refs": [
+    "solana-ct",
+    "solana-pm",
+    "agave4"
+   ]
+  },
+  {
+   "name": "Aztec",
+   "kind": "Privacy L2 on Ethereum",
+   "status": "live",
+   "since": "Mar 2026 (alpha)",
+   "model": "Private execution: smart contracts with private state, settled to Ethereum.",
+   "hides": "Contract state and execution details, by default.",
+   "visible": "What a contract chooses to make public.",
+   "fee": "",
+   "fee_note": "",
+   "refs": [
+    "aztec-alpha"
+   ]
+  },
+  {
+   "name": "ZKsync Prividium",
+   "kind": "Permissioned chain anchored to Ethereum",
+   "status": "live",
+   "since": "Q1 2026",
+   "model": "A private, permissioned chain per operator; transaction data stays off the public chain, with validity proofs posted to Ethereum.",
+   "hides": "All transaction data from the public.",
+   "visible": "Proofs and state commitments on Ethereum; the operator controls access to the data.",
+   "fee": "",
+   "fee_note": "set by the operator",
+   "refs": [
+    "prividium"
+   ]
+  },
+  {
+   "name": "Hedera",
+   "kind": "Public network, plus private networks",
+   "status": "live",
+   "since": "May 2026",
+   "model": "HashSphere private networks for institutions, alongside Hedera's published transaction privacy design.",
+   "hides": "Everything on a private network from outsiders.",
+   "visible": "What the network operator chooses to anchor or share.",
+   "fee": "about $0.001",
+   "fee_note": "public network, token transfer (published fee schedule)",
+   "refs": [
+    "hedera-priv",
+    "hedera-fees"
+   ]
+  },
+  {
+   "name": "Avalanche",
+   "kind": "Public L1",
+   "status": "live",
+   "since": "Mar 2025 (contract standard)",
+   "model": "Encrypted ERC-20 (eERC): zero-knowledge proofs plus homomorphic encryption in an ordinary contract, with no protocol change. Can issue a private token or wrap an existing ERC-20. Private permissioned Avalanche L1s are also available.",
+   "hides": "Balances and transfer amounts.",
+   "visible": "The transaction and the accounts that send it, as with any contract call.",
+   "fee": "about $0.02",
+   "fee_note": "encrypted transfer (about 947,000 gas), live snapshot",
+   "refs": [
+    "eerc"
+   ]
+  },
+  {
+   "name": "Aptos",
+   "kind": "Public L1",
+   "status": "live",
+   "since": "Apr 2026 (APT only)",
+   "model": "Confidential APT: balances held encrypted in a protocol pool, with proofs checked by validators. Only APT so far.",
+   "hides": "Amounts and balances.",
+   "visible": "Addresses, asset type, timing, and amounts moving in or out of the pool. An optional governance-set auditor can read amounts.",
+   "fee": "",
+   "fee_note": "",
+   "refs": [
+    "aptos-capt"
+   ]
+  },
+  {
+   "name": "Aleo",
+   "kind": "Privacy L1",
+   "status": "live",
+   "since": "Jan 2026 (USDCx)",
+   "model": "Private by default: a zero-knowledge chain where transfers spend encrypted records. Circle's USDCx stablecoin is live, backed 1:1 through Circle's xReserve.",
+   "hides": "Sender, receiver and amount.",
+   "visible": "That a transaction happened, and transfers between public and private balances. USDCx includes compliance monitoring and a freeze-list check.",
+   "fee": "",
+   "fee_note": "",
+   "refs": [
+    "aleo-usdcx",
+    "aleo-ct"
+   ]
+  },
+  {
+   "name": "Stellar",
+   "kind": "Public L1",
+   "status": "coming",
+   "since": "testnet Aug 2026, audited Oct 2026",
+   "model": "X-Ray zero-knowledge building blocks went live on mainnet in January 2026 (Protocol 25); confidential tokens reached testnet in August 2026, and OpenZeppelin shipped the audited contracts in October. Not yet approved for mainnet.",
+   "hides": "Planned: token amounts and balances.",
+   "visible": "Today, transfers are public. When live: addresses, and amounts moving in or out of confidential balances.",
+   "fee": "about $0.000002",
+   "fee_note": "base fee, live snapshot",
+   "refs": [
+    "stellar-xray",
+    "stellar-ct",
+    "oz-stellar",
+    "fee-stellar"
+   ]
+  },
+  {
+   "name": "XRP Ledger",
+   "kind": "Public L1",
+   "status": "coming",
+   "since": "in validator vote (21 of 35 for, 28 needed, Nov 2026)",
+   "model": "Confidential multi-purpose tokens (XLS-96), proposed as a protocol amendment.",
+   "hides": "Planned: token amounts.",
+   "visible": "Today, transfers are public.",
+   "fee": "about $0.00001",
+   "fee_note": "reference transaction cost",
+   "refs": [
+    "xrpl-cmpt",
+    "fee-xrpl",
+    "xrpl-amend"
+   ]
+  },
+  {
+   "name": "Arc (Circle)",
+   "kind": "Public L1",
+   "status": "coming",
+   "since": "mainnet Sep 2026, privacy later",
+   "model": "Opt-in privacy with built-in auditability, on the roadmap; mainnet launched without it.",
+   "hides": "Planned: selected transaction details.",
+   "visible": "Today, transfers are public.",
+   "fee": "",
+   "fee_note": "",
+   "refs": [
+    "arc-privacy",
+    "arc-mainnet"
+   ]
+  },
+  {
+   "name": "Hyperledger Besu",
+   "kind": "Private networks",
+   "status": "changed",
+   "since": "Jun 2025",
+   "model": "Private networks are private by nature: only members can read them. Built-in private transactions (Tessera) were removed in release 25.6.0.",
+   "hides": "The whole network from non-members.",
+   "visible": "Every member of the network sees every transaction unless access is restricted further.",
+   "fee": "$0",
+   "fee_note": "free-gas private network",
+   "refs": [
+    "besu-tessera",
+    "besu-freegas"
+   ]
+  }
+ ],
+ "costs": [
+  [
+   "Canton",
+   1.0,
+   "gross median, before operator rewards",
+   "canton-cip"
+  ],
+  [
+   "Avalanche",
+   0.0198,
+   "eERC encrypted transfer",
+   "eerc"
+  ],
+  [
+   "Ethereum",
+   0.0168,
+   "",
+   "fee-eth"
+  ],
+  [
+   "Arbitrum One",
+   0.0029,
+   "",
+   ""
+  ],
+  [
+   "Polygon PoS",
+   0.0016,
+   "",
+   ""
+  ],
+  [
+   "Hedera",
+   0.001,
+   "",
+   "hedera-fees"
+  ],
+  [
+   "Base",
+   0.0009,
+   "",
+   "fee-base"
+  ],
+  [
+   "Solana",
+   0.00045,
+   "",
+   ""
+  ],
+  [
+   "XRP Ledger",
+   1.18e-05,
+   "",
+   "fee-xrpl"
+  ],
+  [
+   "Stellar",
+   1.5e-06,
+   "",
+   "fee-stellar"
+  ]
+ ]
+}

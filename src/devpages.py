@@ -225,7 +225,7 @@ FAQ=[
 ]
 def strip_tags(s): return re.sub(r'\s+',' ',html.unescape(re.sub(r'<[^>]+>','',s))).strip()
 def qid(q): return 'q-'+re.sub('[^a-z0-9]+','-',q.lower()).strip('-')[:60]
-FAQ+=globals().get('PRIVACY_FAQ',[])   # privacy preview (local only until launch)
+FAQ+=globals().get('PRIVACY_FAQ',[])
 faq_html=''.join(f'<h2>{g}</h2>'+''.join(f'<details class="qa" id="{qid(q)}"><summary>{html.escape(q)}</summary><p>{ans}</p></details>' for q,ans in qs) for g,qs in FAQ)
 faq_page=f"""<main class="page"><div class="eyebrow">FAQ</div><h1>Questions about FinP2P, answered with sources.</h1>
 <p class="lede">What the network is, what is live, how to build on it, how agents can use it, and who runs this site. Every answer links to the page or public document behind it.</p>

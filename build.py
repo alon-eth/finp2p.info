@@ -7,10 +7,9 @@ ROOT=Path(__file__).parent; SRC=ROOT/'src'; DIST=ROOT/'dist'; DATA=ROOT/'data'
 G=json.load(open(DATA/'graph.json')); APPS=json.load(open(DATA/'apps.json')); TYPES=json.load(open(DATA/'types.json')); CATS=json.load(open(DATA/'categories.json'))
 SITE='https://finp2p.info'; TODAY=datetime.date.today().isoformat(); DATA_DATE=G.get('generated','2026-09-20')
 NAV=[('/', 'Home'),('/how-it-works/','How it works'),('/network/','Network'),('/map/','Map'),('/apps/','Apps'),('/institutions/','Institutions'),('/sources/','Sources'),('/developers/','Developers'),('/faq/','FAQ'),('/about/','About')]
-# privacy preview: local-only until launch. preview/ is excluded from publish.sh, so Vercel never builds it.
-PRIV_ON=os.environ.get('F2P_PRIVACY')=='1' and (ROOT/'preview'/'privacy.py').exists()
+PRIV_ON=True   # privacy pages launched 2026-11-06
 if PRIV_ON: NAV.insert(1,('/privacy/','Privacy'))
-NAV2=PRIV_ON   # grouped dropdown nav, previewed with the privacy pages
+NAV2=True   # grouped dropdown nav
 NAV_GROUPS=[('/privacy/','Privacy',None),('/how-it-works/','How it works',None),
  (None,'Explore',[('/network/','Network','Every connected piece, by layer'),('/map/','Map','Every app and connection, drawn'),('/apps/','Apps','The full SuperApp catalog'),('/institutions/','Institutions','Banks and partners, with citations')]),
  (None,'Build',[('/developers/','Developers','Field guide to building on FinP2P'),('/agents/','For AI agents','llms.txt, MCP, data and ground rules')]),
@@ -186,7 +185,7 @@ def refs(rs):
         out.append(f'<a class="ref{" int" if r=="internal" else ""}" href="{sd["url"]}" target="_blank" rel="noopener" title="{t}">{lab}</a>' if sd['url'] else f'<span class="ref int" title="{t}">{lab}</span>')
     return ''.join(out)
 PRIV_HOME=PRIV_CARD=PRIV_HIW=PRIV_NET=PRIV_SRC=PRIV_LLMS=PRIV_LLMS_FULL=''
-if PRIV_ON: exec(open(ROOT/'preview'/'privacy.py').read())
+if PRIV_ON: exec(open(SRC/'privacy.py').read())
 # ---------- home
 home=f"""<main class="page">
 <div class="eyebrow">Ownera's FinP2P network, mapped and sourced</div>
@@ -377,8 +376,6 @@ exec(open(SRC/'extra.py').read())
 shutil.copy(SRC/'og.png',DIST/'og.png')
 (DIST/'og').mkdir(exist_ok=True)
 for p in sorted((SRC/'og').glob('*.png')): shutil.copy(p,DIST/'og'/p.name)
-if PRIV_ON:
-    for p in (ROOT/'preview'/'og').glob('*.png'): shutil.copy(p,DIST/'og'/p.name)
 (DIST/'favicon.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#0F1413"/><circle cx="20" cy="32" r="6" fill="#3ED08F"/><circle cx="44" cy="20" r="6" fill="#EEF1EE"/><circle cx="44" cy="44" r="6" fill="#EEF1EE"/><path d="M26 32h12M26 30l12-8M26 34l12 8" stroke="#3ED08F" stroke-width="3" fill="none"/></svg>')
 (DIST/'robots.txt').write_text(f'# finp2p.info is an independent community resource. All crawlers, including AI crawlers, are welcome.\n# Data is CC BY 4.0; attribute to finp2p.info. Plain-text versions: {SITE}/llms.txt and {SITE}/llms-full.txt\nUser-agent: *\nAllow: /\nSitemap: {SITE}/sitemap.xml\n')
 PRIORITY={'/':'1.0','/privacy/':'0.9','/privacy/why/':'0.7','/map/':'0.9','/how-it-works/':'0.9','/network/':'0.8','/apps/':'0.8','/institutions/':'0.8','/sources/':'0.7','/build/':'0.6','/about/':'0.5','/developers/':'0.8','/agents/':'0.7','/faq/':'0.7','/changes/':'0.6'}
