@@ -1,12 +1,20 @@
 #!/usr/bin/env python3
 """finp2p.info static build. Pure stdlib. `python3 build.py` writes dist/. Pages share one chrome; the
 explainer and map bodies are the artifact HTML files with their <title>/<style> hoisted into the head."""
-import json, re, html, shutil, datetime
+import json, re, html, shutil, datetime, os
 from pathlib import Path
 ROOT=Path(__file__).parent; SRC=ROOT/'src'; DIST=ROOT/'dist'; DATA=ROOT/'data'
 G=json.load(open(DATA/'graph.json')); APPS=json.load(open(DATA/'apps.json')); TYPES=json.load(open(DATA/'types.json')); CATS=json.load(open(DATA/'categories.json'))
 SITE='https://finp2p.info'; TODAY=datetime.date.today().isoformat(); DATA_DATE=G.get('generated','2026-09-20')
 NAV=[('/', 'Home'),('/how-it-works/','How it works'),('/network/','Network'),('/map/','Map'),('/apps/','Apps'),('/institutions/','Institutions'),('/sources/','Sources'),('/developers/','Developers'),('/faq/','FAQ'),('/about/','About')]
+# privacy preview: local-only until launch. preview/ is excluded from publish.sh, so Vercel never builds it.
+PRIV_ON=os.environ.get('F2P_PRIVACY')=='1' and (ROOT/'preview'/'privacy.py').exists()
+if PRIV_ON: NAV.insert(1,('/privacy/','Privacy'))
+NAV2=PRIV_ON   # grouped dropdown nav, previewed with the privacy pages
+NAV_GROUPS=[('/privacy/','Privacy',None),('/how-it-works/','How it works',None),
+ (None,'Explore',[('/network/','Network','Every connected piece, by layer'),('/map/','Map','Every app and connection, drawn'),('/apps/','Apps','The full SuperApp catalog'),('/institutions/','Institutions','Banks and partners, with citations')]),
+ (None,'Build',[('/developers/','Developers','Field guide to building on FinP2P'),('/agents/','For AI agents','llms.txt, MCP, data and ground rules')]),
+ (None,'About',[('/about/','About this site','Who runs it, and the disclosure'),('/faq/','FAQ','Questions, answered with sources'),('/sources/','Sources','Every document behind the site'),('/changes/','What changed','New listings and updates, with RSS')])]
 BASE_CSS = """
 :root{--ground:#F6F4EE;--paper:#FFFFFF;--ink:#17211F;--muted:#5C6865;--faint:#9AA39F;--line:#D8D3C6;--accent:#0C8F57;--accent-soft:rgba(12,143,87,.10);--warm:#B7791F;--warm-soft:rgba(183,121,31,.12);
  --serif:'Newsreader',Georgia,serif;--sans:'Instrument Sans','Helvetica Neue',Arial,sans-serif;--mono:'JetBrains Mono',ui-monospace,Menlo,monospace}
@@ -66,12 +74,25 @@ details.qa{border-bottom:1px solid var(--line);padding:12px 0}details.qa summary
 .toc{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}.toc a{font-size:13px;border:1px solid var(--line);border-radius:999px;padding:4px 11px;text-decoration:none;color:var(--muted);background:var(--paper)}.toc a:hover{border-color:var(--accent);color:var(--ink)}
 .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}select,input[type=search]{background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:8px 10px;font:14px var(--sans)}
 """
+NAV2_CSS='''.site-nav ul{align-items:center}.site-nav ul>li>a{display:inline-block;line-height:1.6}.ddbtn{line-height:1.6}.site-nav li.dd{position:relative}.ddbtn{background:none;border:0;padding:6px 0;font:inherit;font-size:13.5px;color:var(--muted);cursor:pointer;display:inline-flex;align-items:center;gap:4px;border-bottom:2px solid transparent;white-space:nowrap}.ddbtn:hover{color:var(--ink)}.ddbtn.on{color:var(--ink);border-bottom-color:var(--accent)}.ddbtn svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.6;transition:transform .15s}
+.ddpanel{display:none;position:absolute;top:calc(100% + 10px);left:-14px;min-width:290px;background:var(--paper);border:1px solid var(--line);border-radius:10px;box-shadow:0 14px 34px rgba(0,0,0,.16);padding:6px;z-index:60}.ddpanel::before{content:'';position:absolute;left:0;right:0;top:-12px;height:12px}
+.site-nav .ddpanel a{display:block;padding:9px 12px;border-radius:7px;border-bottom:0;white-space:normal}.site-nav .ddpanel a:hover,.site-nav .ddpanel a.on{background:var(--accent-soft)}.ddpanel b{display:block;color:var(--ink);font-weight:600;font-size:14px}.ddpanel span{display:block;color:var(--muted);font-size:12.5px;margin-top:1px}
+@media (min-width:861px){.dd:hover .ddpanel,.dd:focus-within .ddpanel,.dd.open .ddpanel{display:block}.dd:hover .ddbtn svg,.dd.open .ddbtn svg{transform:rotate(180deg)}}
+@media (max-width:860px){.ddbtn{display:block;width:100%;text-align:left;padding:14px 0 4px;border-bottom:0;font:600 11px var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--faint);cursor:default}.ddbtn svg{display:none}.ddbtn.on{color:var(--faint)}
+ .ddpanel{display:block;position:static;min-width:0;background:none;border:0;box-shadow:none;padding:0}.ddpanel::before{display:none}.site-nav .ddpanel a{padding:10px 0;border-radius:0;border-bottom:1px solid var(--line)}.site-nav .ddpanel a:hover,.site-nav .ddpanel a.on{background:none}.ddpanel a.on b{color:var(--accent)}.ddpanel span{display:none}}
+'''
+NAV2_JS='''<script>(function(){var dds=document.querySelectorAll('.site-nav li.dd');function closeAll(x){dds.forEach(function(d){if(d!==x){d.classList.remove('open');d.querySelector('.ddbtn').setAttribute('aria-expanded','false')}})}
+dds.forEach(function(d){var b=d.querySelector('.ddbtn');b.addEventListener('click',function(e){if(matchMedia('(max-width:860px)').matches)return;e.stopPropagation();var o=!d.classList.contains('open');closeAll(d);d.classList.toggle('open',o);b.setAttribute('aria-expanded',o?'true':'false')})});
+document.addEventListener('click',function(){closeAll(null)});document.addEventListener('keydown',function(e){if(e.key==='Escape')closeAll(null)})})();</script>'''
 FONTS='<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">'
 THEME_JS="<script>(function(){try{var t=localStorage.getItem('f2p-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>"
 NAV_JS="""<script>(function(){var n=document.getElementById('sitenav'),b=document.getElementById('navtoggle');function set(o){n.classList.toggle('open',o);b.setAttribute('aria-expanded',o?'true':'false')}
 b.addEventListener('click',function(){set(!n.classList.contains('open'))});
 n.querySelectorAll('#navmenu a').forEach(function(a){a.addEventListener('click',function(){set(false)})});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')set(false)});})();</script>"""
+if NAV2:
+    BASE_CSS=BASE_CSS.replace('@media (max-width:1180px)','@media (max-width:860px)')+NAV2_CSS
+    NAV_JS=NAV_JS+NAV2_JS
 TOGGLE="""<button class="themebtn" id="themebtn" aria-label="Toggle theme"><svg class="ic-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="ic-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
 <script>document.getElementById('themebtn').addEventListener('click',function(){var h=document.documentElement,cur=h.getAttribute('data-theme');var dark=cur?cur==='dark':matchMedia('(prefers-color-scheme: dark)').matches;var n=dark?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem('f2p-theme',n)}catch(e){}});</script>"""
 LICENSE_URL='https://creativecommons.org/licenses/by/4.0/'
@@ -100,9 +121,19 @@ def jsonld(path,title,desc,img,extra_ld=()):
             "distribution":[{"@type":"DataDownload","encodingFormat":"application/json","contentUrl":SITE+"/data/graph.json"}]})
     g+=list(extra_ld)
     return '<script type="application/ld+json">'+json.dumps({"@context":"https://schema.org","@graph":g})+'</script>'
+def nav2(path):
+    out=''
+    for href,label,items in NAV_GROUPS:
+        if items is None:
+            out+=f'<li><a href="{href}"{" class=\"on\"" if (path==href or path.startswith(href)) else ""}>{label}</a></li>'
+        else:
+            on=any(path==h for h,_,_ in items); gid='dd-'+label.lower()
+            out+=(f'<li class="dd"><button type="button" class="ddbtn{" on" if on else ""}" aria-expanded="false" aria-controls="{gid}">{label}<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg></button>'
+                  f'<div class="ddpanel" id="{gid}">'+''.join(f'<a href="{h}"{" class=\"on\"" if path==h else ""}><b>{n}</b><span>{d}</span></a>' for h,n,d in items)+'</div></li>')
+    return out
 def chrome(path,title,desc,body,extra_head='',wide=False,og_type='website',extra_ld=()):
     img=f"{SITE}/og/{path.strip('/').replace('/','-') or 'home'}.png"
-    nav=''.join(f'<li><a href="{p}"{" class=\"on\"" if p==path else ""}>{n}</a></li>' for p,n in NAV)+f'<li class="cta"><a href="/build/" class="navbtn{" on" if path=="/build/" else ""}">Build with us</a></li>'
+    nav=(nav2(path) if NAV2 else ''.join(f'<li><a href="{p}"{" class=\"on\"" if p==path else ""}>{n}</a></li>' for p,n in NAV))+f'<li class="cta"><a href="/build/" class="navbtn{" on" if path=="/build/" else ""}">Build with us</a></li>'
     return f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{html.escape(title)}</title><meta name="description" content="{html.escape(desc)}"><link rel="canonical" href="{SITE}{path}">
@@ -154,14 +185,16 @@ def refs(rs):
         t=html.escape(sd['title'])
         out.append(f'<a class="ref{" int" if r=="internal" else ""}" href="{sd["url"]}" target="_blank" rel="noopener" title="{t}">{lab}</a>' if sd['url'] else f'<span class="ref int" title="{t}">{lab}</span>')
     return ''.join(out)
+PRIV_HOME=PRIV_CARD=PRIV_HIW=PRIV_NET=PRIV_SRC=PRIV_LLMS=PRIV_LLMS_FULL=''
+if PRIV_ON: exec(open(ROOT/'preview'/'privacy.py').read())
 # ---------- home
 home=f"""<main class="page">
 <div class="eyebrow">Ownera's FinP2P network, mapped and sourced</div>
 <h1>The network that connects the whole RWA ecosystem.</h1>
 <p class="lede">FinP2P is the application layer that lets banks, venues, custodians and issuers move tokenized assets and cash between each other without integrating one by one. This site is an independent community resource for it: every SuperApp on the store, the institutions attached to each, how a transaction moves, how to build on it, and a public source for every claim. It is not run by Ownera; it exists to help more people understand the network and connect to it.</p>
-<div class="stats"><div class="stat"><b>{len(APPS)}</b><span>SuperApps on the store</span></div><div class="stat"><b>{prod}</b><span>in production</span></div><div class="stat"><b>{len(insts)}</b><span>named institutions and partners</span></div><div class="stat"><b>$5B+</b><span>monthly volume, JPM and HQLAx repo</span></div></div>
+{PRIV_HOME}<div class="stats"><div class="stat"><b>{len(APPS)}</b><span>SuperApps on the store</span></div><div class="stat"><b>{prod}</b><span>in production</span></div><div class="stat"><b>{len(insts)}</b><span>named institutions and partners</span></div><div class="stat"><b>$5B+</b><span>monthly volume, JPM and HQLAx repo</span></div></div>
 <div class="cards">
-<a class="card" href="/network/"><h3>Every connected piece</h3><p>Ownera's own picture of the network with every real name filled in: counterparties, apps, chains, standards, cash rails, custody, platforms.</p></a>
+{PRIV_CARD}<a class="card" href="/network/"><h3>Every connected piece</h3><p>Ownera's own picture of the network with every real name filled in: counterparties, apps, chains, standards, cash rails, custody, platforms.</p></a>
 <a class="card" href="/how-it-works/"><h3>How it works</h3><p>Three diagrams: the shape of the network, one transaction end to end, and where a data utility plugs in.</p></a>
 <a class="card" href="/map/"><h3>The map</h3><p>All {len(APPS)} apps, {len(G['edges'])} derived connections and {len(insts)} institutions. Value-chain, network and institution views. Click anything.</p></a>
 <a class="card" href="/apps/"><h3>App catalog</h3><p>Every SuperApp with status, company, category, what it orchestrates, and who it serves.</p></a>
@@ -174,7 +207,7 @@ home=f"""<main class="page">
 <p>Draper Goren Blockchain published <a href="https://dgb.vc/fifteen-layers">The Real-World Asset Stack: fifteen layers</a>, a map of what it takes for a real asset to go on-chain, from origination to collateral, naming 112 institutions across the layers. Most of those layers only become useful when they can talk to each other. FinP2P is the network where that is happening in production today, and Ownera's own store, developer documentation and industry reports contain enough public data to map it. This site is that map, kept current and honest about what is confirmed and what is not.</p>
 <p>It is maintained by Alon Goren, who is on the board of Ownera, and whose fund Draper Goren Holm is an Ownera investor. That is a reason to be careful, so every institution on the site carries a public source, and anything we cannot source publicly is left off. Ownera does not operate, review or endorse this site. Full disclosure in the footer and on the <a href="/about/">about page</a>.</p>
 <h2>What is on the network right now</h2>
-<p><strong>Live:</strong> intraday repo between J.P. Morgan and HQLAx, in production since 2025, with up to $1 billion traded in a day. <strong>Coming:</strong> Goldman Sachs, Apex, Archax and DTCC on repo and collateral upgrades, per Ownera's Open Collateral Network site; live pilots this month, full production Q4 2026. <strong>Proven in sandbox:</strong> tokenized money market funds as collateral across 48 firms in the US and 30 in the UK and EU, with BlackRock, Citi, Fidelity, Franklin Templeton, State Street, UBS and others in the contributor lists.</p>
+<p><strong>Live:</strong> intraday repo between J.P. Morgan and HQLAx, in production since 2025, with up to $1 billion traded in a day. <strong>Coming:</strong> Goldman Sachs, Apex, Archax and DTCC on repo and collateral upgrades, per Ownera's Open Collateral Network site; live pilots slated for September 2026 and full production in Q4 2026, per that site. <strong>Proven in sandbox:</strong> tokenized money market funds as collateral across 48 firms in the US and 30 in the UK and EU, with BlackRock, Citi, Fidelity, Franklin Templeton, State Street, UBS and others in the contributor lists.</p>
 <p><a class="btn primary" href="/map/">Open the map</a> <a class="btn" href="/sources/">See the sources</a></p>
 <h2>Building for the network?</h2>
 <p>If you are building a SuperApp, planning a company for the network, or run an institution on it, <a href="/build/">tell us what you are working on</a>. Draper Goren Blockchain co-founds and backs the companies that make tokenized markets work, and we are building one of these SuperApps ourselves.</p>
@@ -183,6 +216,7 @@ write('/',chrome('/','FinP2P.info: the FinP2P network, mapped','An independent, 
 # ---------- how it works
 t,head,body=hoist(SRC/'how-it-works.body.html')
 body=body.replace('<div class="wrap">','<div class="wrap page">',1)
+if PRIV_HIW: body=PRIV_HIW(body)
 write('/how-it-works/',chrome('/how-it-works/','How FinP2P works','How Ownera\'s FinP2P network works: Routers inside each institution, peer-to-peer orchestration, one transaction end to end, and where data utilities plug in.',body,extra_head=head))
 # ---------- map
 t,head,body=hoist(SRC/'map.body.html')
@@ -242,7 +276,7 @@ assert not missing, f'sources cited by nothing: {missing}'
 srows=''.join(f'<tr><td data-th="Source">{f"<a href=\"{s["url"]}\" target=\"_blank\" rel=\"noopener\">{html.escape(s["title"])}</a>" if s["url"] else html.escape(s["title"])}</td><td data-th="Publisher" style="white-space:nowrap;color:var(--muted);font-size:12.5px">{html.escape(s["pub"])}<br>{s["date"]}</td><td data-th="Cited by" style="font-size:12.5px">{len(cnt[r])}: {html.escape(", ".join(cnt[r]))}</td></tr>' for r,s in sorted(PUBLIC['sources'].items(),key=lambda kv:-len(cnt.get(kv[0],[]))))
 src_page=f"""<main class="page wide"><div class="eyebrow">Evidence</div><h1>Sources</h1><p class="lede">All {len(PUBLIC['sources'])} documents behind this site, each listed once, with the institutions and apps that rely on it. Dates are the document's own. Ownera's <a href="https://www.ownera.io/news">news page</a> indexes its partnership announcements; the <a href="https://ocn.ownera.io/">Open Collateral Network</a> site hosts the full industry reports.</p>
 <div class="tbl stack"><table><thead><tr><th>Source</th><th>Publisher · date</th><th>Cited by</th></tr></thead><tbody>{srows}</tbody></table></div>
-<h2>Use the data</h2><p>The whole model behind this site is one file: <a href="/data/graph.json">graph.json</a> (apps, derived connections with their reasons, institutions with references, and every source). It is published under <a href="https://creativecommons.org/licenses/by/4.0/" rel="license">CC BY 4.0</a>, so you may reuse it anywhere with attribution to finp2p.info. Records we cannot tie to a public document are not in it.</p>
+{PRIV_SRC}<h2>Use the data</h2><p>The whole model behind this site is one file: <a href="/data/graph.json">graph.json</a> (apps, derived connections with their reasons, institutions with references, and every source). It is published under <a href="https://creativecommons.org/licenses/by/4.0/" rel="license">CC BY 4.0</a>, so you may reuse it anywhere with attribution to finp2p.info. Records we cannot tie to a public document are not in it.</p>
 <h2>How the app-to-app connections were derived</h2><p>Ownera does not publish app-to-app links. The map derives them from each app's category, participant types and stated orchestration using ten explicit rules, listed at the bottom of the <a href="/map/">map page</a>. They are our reading of the listings, not an Ownera statement.</p></main>"""
 write('/sources/',chrome('/sources/','Sources','Every public document behind finp2p.info, with the institutions that cite it.',src_page,wide=True))
 # ---------- about
@@ -302,6 +336,7 @@ function open(key){{var d=D[key];if(!d)return;document.getElementById('mtitle').
 function close(){{m.classList.remove('on');bg.classList.remove('on');try{{history.replaceState(null,'',location.pathname)}}catch(e){{}}}}
 document.querySelectorAll('button.chip[data-key]').forEach(function(b){{b.addEventListener('click',function(){{open(b.dataset.key)}})}});bg.addEventListener('click',close);document.getElementById('mclose').addEventListener('click',close);document.addEventListener('keydown',function(e){{if(e.key==='Escape')close()}});
 if(location.hash.length>1){{open(decodeURIComponent(location.hash.slice(1)))}}}})();</script>"""
+if PRIV_NET: net=PRIV_NET(net)
 write('/network/',chrome('/network/','The FinP2P network, every connected piece','Every publicly named piece of the FinP2P network by layer: counterparties, SuperApps, blockchains, token standards, cash rails, custody, internal platforms and industry bodies, each with a source.',net,extra_head=NET_CSS,wide=True))
 # ---------- build with us (DGB + contact)
 CF_STYLE='<style>#cf input,#cf select,#cf textarea{background:var(--ground);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:9px 10px;font:14px var(--sans)}#cf input:focus,#cf select:focus,#cf textarea:focus{outline:none;border-color:var(--accent)}</style>'
@@ -342,10 +377,12 @@ exec(open(SRC/'extra.py').read())
 shutil.copy(SRC/'og.png',DIST/'og.png')
 (DIST/'og').mkdir(exist_ok=True)
 for p in sorted((SRC/'og').glob('*.png')): shutil.copy(p,DIST/'og'/p.name)
+if PRIV_ON:
+    for p in (ROOT/'preview'/'og').glob('*.png'): shutil.copy(p,DIST/'og'/p.name)
 (DIST/'favicon.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#0F1413"/><circle cx="20" cy="32" r="6" fill="#3ED08F"/><circle cx="44" cy="20" r="6" fill="#EEF1EE"/><circle cx="44" cy="44" r="6" fill="#EEF1EE"/><path d="M26 32h12M26 30l12-8M26 34l12 8" stroke="#3ED08F" stroke-width="3" fill="none"/></svg>')
 (DIST/'robots.txt').write_text(f'# finp2p.info is an independent community resource. All crawlers, including AI crawlers, are welcome.\n# Data is CC BY 4.0; attribute to finp2p.info. Plain-text versions: {SITE}/llms.txt and {SITE}/llms-full.txt\nUser-agent: *\nAllow: /\nSitemap: {SITE}/sitemap.xml\n')
-PRIORITY={'/':'1.0','/map/':'0.9','/how-it-works/':'0.9','/network/':'0.8','/apps/':'0.8','/institutions/':'0.8','/sources/':'0.7','/build/':'0.6','/about/':'0.5','/developers/':'0.8','/agents/':'0.7','/faq/':'0.7','/changes/':'0.6'}
-(DIST/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+''.join(f'<url><loc>{SITE}{p}</loc><lastmod>{TODAY}</lastmod><changefreq>weekly</changefreq><priority>{PRIORITY.get(p,"0.5")}</priority></url>' for p,_ in NAV+[('/build/','Build with us'),('/agents/','For AI agents'),('/changes/','What changed')])+'</urlset>')
+PRIORITY={'/':'1.0','/privacy/':'0.9','/privacy/why/':'0.7','/map/':'0.9','/how-it-works/':'0.9','/network/':'0.8','/apps/':'0.8','/institutions/':'0.8','/sources/':'0.7','/build/':'0.6','/about/':'0.5','/developers/':'0.8','/agents/':'0.7','/faq/':'0.7','/changes/':'0.6'}
+(DIST/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+''.join(f'<url><loc>{SITE}{p}</loc><lastmod>{TODAY}</lastmod><changefreq>weekly</changefreq><priority>{PRIORITY.get(p,"0.5")}</priority></url>' for p,_ in NAV+[('/build/','Build with us'),('/agents/','For AI agents'),('/changes/','What changed')]+([('/privacy/why/','')] if PRIV_ON else []))+'</urlset>')
 (DIST/'llms.txt').write_text(f"""# finp2p.info
 
 > Independent community resource for Ownera's FinP2P network: every SuperApp on the store ({len(APPS)}, {prod} in production), {len(insts)} named institutions and partners (all with public sources), how a transaction moves, and a developer and agent guide to building on it. Maintained by the Draper Goren Blockchain venture studio. Not run, reviewed or endorsed by Ownera; for APIs, Ownera's docs at {DOCS}/ are authoritative. Data as of {DATA_DATE}.
@@ -353,7 +390,7 @@ PRIORITY={'/':'1.0','/map/':'0.9','/how-it-works/':'0.9','/network/':'0.8','/app
 Full text of this site in one file: {SITE}/llms-full.txt
 
 ## Pages
-- {SITE}/how-it-works/ : diagrams of the network shape, one transaction end to end, and the data-utility path
+{PRIV_LLMS}- {SITE}/how-it-works/ : diagrams of the network shape, one transaction end to end, and the data-utility path
 - {SITE}/map/ : interactive map (value chain, network, institutions views)
 - {SITE}/apps/ : catalog of every SuperApp with status, company, category, orchestration
 - {SITE}/institutions/ : directory of institutions with citations and a public/store/unconfirmed filter
@@ -409,6 +446,7 @@ for i in sorted(insts,key=lambda i:i['name']):
     full.append(f"- {i['name']} [{KIND.get(i['kind'],i['kind'])}] attached to: {ls or 'the network'}. Sources: {ss}")
 full.append('\n\n# Network layers\n')
 for l in L['layers']: full.append(f"## {l['title']}\n"+'\n'.join(f"- {it['name']}: {it.get('note','')} <{it['src']}>" for it in l['items']))
+full.append(PRIV_LLMS_FULL)
 full.append(f'\n\n# Sources\n'+'\n'.join(f"- {s['title']}, {s['pub']}, {s['date']} <{s['url']}>" for s in PUBLIC['sources'].values()))
 (DIST/'llms-full.txt').write_text('\n'.join(full)+'\n')
 INDEX={"name":"finp2p.info data catalog","description":"Independent community dataset about Ownera's FinP2P network. Not affiliated with Ownera.","license":LICENSE_URL,"attribution":"finp2p.info, Draper Goren Blockchain","snapshot":DATA_DATE,"built":TODAY,

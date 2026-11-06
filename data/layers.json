@@ -8,10 +8,11 @@
    {"name":"Corda","src":"https://www.ownera.io/news","note":"R3 partnership, Sept 2024"},
    {"name":"Hedera","src":"https://www.ownera.io/news","note":"Hedera Foundation partnership, Dec 2025; Hedera ATS plugin in the EVM adapter"},
    {"name":"XRP Ledger","src":"https://superapps.ownera.io/app/universal-blockchain-connector","note":"listed under non-EVM chains"},
-   {"name":"Tezos","src":"https://github.com/owneraio/finp2p-tezos-adapter","note":"open-source adapter, 2022"},
+   {"name":"Tezos","src":"https://github.com/owneraio/finp2p-tezos-adapter","note":"open-source adapter, 2022; repository archived by Ownera on 2026-11-01"},
    {"name":"Stellar","src":"https://www.gdf.io/wp-content/uploads/2026/07/6.07.26_Unlocking-Capital-with-U.S-Tokenized-Money-Market-Funds-for-Collateral-Mobility.pdf","note":"Stellar Development Foundation in the US sandbox; Nomyx deploys on Stellar"},
    {"name":"Kadena","src":"https://www.ownera.io/news","note":"Kadena partnership, Jan 2025"},
-   {"name":"Solana, Base, Polygon","src":"https://www.ownera.io/","note":"named on Ownera's site among supported networks"},
+   {"name":"Solana","src":"https://www.ownera.io/","note":"named on Ownera's home page among supported networks"},
+   {"name":"Polygon","src":"https://ttm.ownera.io/","note":"named by Ownera's Tokenized Treasury Manager: transfer tokens between Ethereum, Polygon and Ripple Ledger"},
    {"name":"150+ chains via LayerZero","src":"https://www.crowdfundinsider.com/2025/12/256991-uk-fintech-ownera-layerzero-partner-to-enable-cross-chain-tokenization/","note":"LayerZero Cross-chain Connector SuperApp"}
   ]},
   {"id":"standards","title":"Token standards and smart-contract families the adapters speak","blurb":"Plugins in Ownera's open-source EVM adapter, plus the standards named on the connector listing.","items":[
@@ -45,7 +46,8 @@
    {"name":"GS DAP (Goldman Sachs)","src":"https://www.coindesk.com/business/2026/06/04/goldman-sachs-teams-with-apex-archax-for-tokenized-real-estate-fund","note":"tokenized real estate fund"},
    {"name":"Euroclear, Clearstream D7","src":"https://ocn.ownera.io/files/gdf-eu-uk-tmmf-collateral-report-2025.pdf","note":"Euroclear in EU/UK working group; Clearstream custodies HQLAx collateral"},
    {"name":"Exberry matching engine","src":"https://superapps.ownera.io/app/exberry-matching-engine","note":"production SuperApp"},
-   {"name":"FIX-connected OMS and ATSs","src":"https://www.gdf.io/wp-content/uploads/2020/12/GDFFIX_WhitePaperFV_030225.pdf","note":"FIX Trading Community alliance"}
+   {"name":"FIX-connected OMS and ATSs","src":"https://www.gdf.io/wp-content/uploads/2020/12/GDFFIX_WhitePaperFV_030225.pdf","note":"FIX Trading Community alliance"},
+   {"name":"Tokenized Treasury Manager (Ownera)","src":"https://ttm.ownera.io/","note":"Ownera's own application on FinP2P: inventory and funding, collateral management (margin calls, substitution, optimization with tools like Transcend) and a treasury hub for minute-precision intraday repo with atomic DvP. Assets on Canton, Ethereum, Stellar or Besu can be repo'd against cash on any supported chain."}
   ]},
   {"id":"industry","title":"Industry bodies and standards that shape the network","blurb":"Where the rules, sandboxes and message standards come from.","items":[
    {"name":"ISDA","src":"https://www.gdf.io/wp-content/uploads/2026/07/6.07.26_Unlocking-Capital-with-U.S-Tokenized-Money-Market-Funds-for-Collateral-Mobility.pdf","note":"co-sponsor, US tokenized collateral working group"},

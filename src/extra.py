@@ -1,7 +1,7 @@
 # What changed (+ RSS) and site search. exec'd by build.py after devpages.py, sharing its globals.
 from email.utils import format_datetime
 from urllib.parse import quote
-CH=json.load(open(DATA/'changes.json'))['entries']
+CH=globals().get('PRIVACY_CHANGES',[])+json.load(open(DATA/'changes.json'))['entries']
 
 # ---------- /changes/ and RSS
 def ch_id(e): return 'c-'+e['date']+'-'+re.sub('[^a-z0-9]+','-',e['title'].lower()).strip('-')[:50]
@@ -27,7 +27,7 @@ items=''.join(f'''<item><title>{html.escape(e['title'])}</title><link>{SITE}/cha
 # ---------- search index + /search/
 IDX=[]
 def add(t,k,d,u): IDX.append({'t':t,'k':k,'d':re.sub(r'\s+',' ',d or '').strip()[:240],'u':u})
-PAGE_DESC={'/':'Overview of the FinP2P network and this site','/how-it-works/':'Diagrams: network shape, one transaction end to end, data utility path','/network/':'Every connected piece by layer: counterparties, apps, chains, standards, cash, custody','/map/':'Interactive map of apps, derived connections and institutions','/apps/':'Catalog of every SuperApp with status, company and category','/institutions/':'Directory of banks, infrastructures and partners with citations','/sources/':'Every public document behind the site','/developers/':'Community guide to building on FinP2P','/faq/':'Frequently asked questions','/about/':'Who maintains this site, disclosure, corrections','/build/':'Build with Draper Goren Blockchain','/agents/':'Guide for AI agents and LLMs','/changes/':'What changed on the network and the site'}
+PAGE_DESC={'/':'Overview of the FinP2P network and this site','/privacy/':'Need-to-know privacy on FinP2P: who sees what, privacy by chain, costs, and questions to ask','/how-it-works/':'Diagrams: network shape, one transaction end to end, data utility path','/network/':'Every connected piece by layer: counterparties, apps, chains, standards, cash, custody','/map/':'Interactive map of apps, derived connections and institutions','/apps/':'Catalog of every SuperApp with status, company and category','/institutions/':'Directory of banks, infrastructures and partners with citations','/sources/':'Every public document behind the site','/developers/':'Community guide to building on FinP2P','/faq/':'Frequently asked questions','/about/':'Who maintains this site, disclosure, corrections','/build/':'Build with Draper Goren Blockchain','/agents/':'Guide for AI agents and LLMs','/changes/':'What changed on the network and the site'}
 for p,n in NAV+[('/build/','Build with us'),('/agents/','For AI agents'),('/changes/','What changed')]: add(n,'Page',PAGE_DESC.get(p,''),p)
 for path,h in DEV_TEXT.items():
     if path=='/faq/': continue

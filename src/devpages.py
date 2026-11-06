@@ -58,7 +58,7 @@ openssl rsa -in prv.key -RSAPublicKey_out -out pub.key   # send pub.key to Owner
   "iat": 1760380800,
   "exp": 1760380830
 }''',False)}
-<p class="note" style="max-width:none">Heads-up: the {a(d('docs/hello-world-sample'),'Hello World')} sample puts the API key in an <code>apiKey</code> claim, while the {a(d('reference/authorization'),'Authorization reference')} calls it <code>sub</code>. Confirm with Ownera which one your Router expects before debugging anything else.</p>
+<p class="note" style="max-width:none">Heads-up: the {a(d('docs/hello-world-sample'),'Hello World')} sample puts the API key in an <code>apiKey</code> claim. The {a(d('reference/authorization'),'Authorization reference')} calls it <code>sub</code> in its prose but uses <code>apiKey</code> in its own code sample. In our own testing with Ownera's engineers (Sep 2026) the auth service read <code>apiKey</code>; setting both <code>sub</code> and <code>apiKey</code> to the API key works. The same reference sets a 5-second default clock-skew tolerance for the nonce, so keep server clocks in sync.</p>
 
 <h2 id="hello">Hello world, in order</h2>
 <p>Ownera's sandbox comes with a simulated custody service, a simulated payment service and at least one test asset shared with you. The {a(d('docs/hello-world-sample'),'Hello World sample')} walks through it with full request and response bodies:</p>
@@ -105,6 +105,7 @@ openssl rsa -in prv.key -RSAPublicKey_out -out pub.key   # send pub.key to Owner
 <tr><td>This site's dataset (apps, derived connections, institutions, sources)</td><td data-th="Where"><a href="/data/graph.json">/data/graph.json</a> · <a href="/data/index.json">/data/index.json</a></td><td data-th="Auth">none, CC BY 4.0</td></tr>
 <tr><td>A Router (sandbox or production)</td><td data-th="Where">URL issued by Ownera or your institution</td><td data-th="Auth">RS256 JWT per call</td></tr>
 </tbody></table></div>
+<p class="note" style="max-width:none">Recent changes in Ownera's open code (checked 6 Nov 2026): the {a('https://github.com/owneraio/finp2p-ethereum-adapter/releases/tag/v0.29.0','EVM adapter v0.29.0')} shipped on 12 Oct; the {a('https://github.com/owneraio/finp2p-nodejs-skeleton-adapter','Node.js skeleton')} now maps swap and move execution-plan instructions and keeps the Router's EIP-712 type definitions on signing templates (20 to 22 Oct); the {a('https://github.com/owneraio/finp2p-certificates-spec','certificates spec')} added collateral-terms v3, with the haircut method set on the agreement (18 to 20 Oct); and the {a('https://github.com/owneraio/finp2p-tezos-adapter','Tezos adapter')} was archived on 1 Nov.</p>
 
 <h2>Shipped something, or found a mistake here?</h2>
 <p>If you built on FinP2P, <a href="/build/">tell us</a>: we will add it to the map, and if you are a founder, Draper Goren Blockchain may want to back it. If this guide has drifted from the official docs, email <a href="mailto:alon@dgb.vc">alon@dgb.vc</a> and we will fix it the same week.</p>
@@ -141,7 +142,7 @@ Write a test for each operation. Do not invent endpoints or fields that are not 
  ('Build a Router client','A coding agent adding FinP2P to an existing backend.',
   f'''Read {DOCS}/docs/hello-world-sample.md and {DOCS}/reference/authorization.md.
 Write a small client module with: a signer that makes a fresh RS256 JWT per request (30 s expiry, 24 random bytes + 8-byte epoch nonce, hex), createOwnerProfile, addAccount, addCertificate, shareProfile, a GraphQL query for shared assets with open intents, executeIntent, and an operation poller.
-Load the API key, organisation ID, Router URL and private key path from environment variables. Note that the two docs pages name the API-key claim differently (apiKey vs sub) and make it configurable.'''),
+Load the API key, organisation ID, Router URL and private key path from environment variables. Put the API key in both the sub and apiKey claims: the docs name it sub in prose but use apiKey in their code samples, and Routers have been seen to read apiKey.'''),
  ('Answer "who is on the network?"','A research assistant.',
   '''Fetch https://finp2p.info/data/graph.json and https://superapps.ownera.io/api/apps.
 List institutions by kind with the app each attaches to, quoting the source title and URL for each.
@@ -201,7 +202,9 @@ FAQ=[
   ('What is FinP2P?','FinP2P is Ownera\'s application-layer network for tokenized finance. Each institution runs its own Router; Routers coordinate transactions peer to peer, and assets and cash stay on whatever ledgers they already live on. Applications connected to Routers are called SuperApps. <a href="/how-it-works/">How it works</a> has the diagrams.'),
   ('Is FinP2P a blockchain? Is there a token?','No to the first: it is not a blockchain and has no shared ledger. It orchestrates transactions across existing blockchains and traditional ledgers. Ownera\'s public documentation describes no network token.'),
   ('Which blockchains does it reach?',f'Per public sources: {html.escape(", ".join(i["name"] for i in CHAINS))}. Each one, with its source, is on the <a href="/network/">network page</a>.'),
-  ('What is live in production?',f'The flagship is intraday repo between J.P. Morgan and HQLAx, in production since 2025 with $5 billion traded in its first month ({a("https://www.hqla-x.com/post/j-p-morgan-hqlax-and-ownera-launch-intraday-repo-solution-with-5bn-traded-in-the-first-month","HQLAx")}). On the store, {len(live)} of {len(APPS)} apps carry production status: {html.escape(", ".join(live))}.'),
+  ('What is live in production?',f'The flagship is intraday repo between J.P. Morgan and HQLAx, in production since 2025 with $5 billion traded in its first month ({a("https://www.hqla-x.com/post/j-p-morgan-hqlax-and-ownera-launch-intraday-repo-solution-with-5bn-traded-in-the-first-month","HQLAx")}). On the store, {len(live)+1} of {len(APPS)} listings carry production status: {html.escape(", ".join(live))}, plus the FinP2P Router License itself.'),
+  ('Is Ownera security-certified?',f'Ownera states that it is ISO 27001 (information security management) and ISO 27017 (cloud services) certified on its {a("https://www.ownera.io/trust","Trust page")}. Its {a("https://143965173.fs1.hubspotusercontent-eu1.net/hubfs/143965173/External%20Share/Ownera_Multi-Chain_Need-to-Know_Privacy_White_Paper.pdf","October 2026 white paper")} adds SOC 2 Type II, and says the scope of each certificate is available from Ownera on request. We have not seen the certificates themselves.'),
+  ('What does Ownera build on the network itself?',f'Besides the Router, Ownera publishes its own applications on the store, and the {a("https://ttm.ownera.io/","Tokenized Treasury Manager")}: inventory and funding, collateral management and a treasury hub for minute-precision intraday repo with atomic delivery versus payment across chains. See the <a href="/network/">network page</a>.'),
   ('If a bank is named on this site, does it use FinP2P?','Not necessarily. A name means the institution is publicly connected to an app or to the network in the cited document, which might be a production deployment, a sandbox report or a vendor\'s partner page. Read the citation on the <a href="/institutions/">institutions page</a>.'),
   ('Where do the app-to-app connections on the map come from?','Ownera does not publish them. We derive them from each app\'s category, participant types and stated orchestration using ten explicit rules, listed on the <a href="/map/">map page</a>. They are our reading, not an Ownera statement.'),
  ]),
@@ -222,6 +225,7 @@ FAQ=[
 ]
 def strip_tags(s): return re.sub(r'\s+',' ',html.unescape(re.sub(r'<[^>]+>','',s))).strip()
 def qid(q): return 'q-'+re.sub('[^a-z0-9]+','-',q.lower()).strip('-')[:60]
+FAQ+=globals().get('PRIVACY_FAQ',[])   # privacy preview (local only until launch)
 faq_html=''.join(f'<h2>{g}</h2>'+''.join(f'<details class="qa" id="{qid(q)}"><summary>{html.escape(q)}</summary><p>{ans}</p></details>' for q,ans in qs) for g,qs in FAQ)
 faq_page=f"""<main class="page"><div class="eyebrow">FAQ</div><h1>Questions about FinP2P, answered with sources.</h1>
 <p class="lede">What the network is, what is live, how to build on it, how agents can use it, and who runs this site. Every answer links to the page or public document behind it.</p>

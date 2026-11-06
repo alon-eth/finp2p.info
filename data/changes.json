@@ -2,6 +2,37 @@
  "note": "Changelog for finp2p.info. Newest first. kind: network (something changed on FinP2P itself) or site (something changed here). Every network entry carries a public source.",
  "entries": [
   {
+   "date": "2026-11-06",
+   "kind": "network",
+   "title": "Ownera's Tokenized Treasury Manager added",
+   "body": "Ownera's own collateral and intraday repo application (inventory and funding, collateral management, treasury hub) is now on the network page, with Transcend as a named optimization integration and Commerzbank's quote as a GDF sandbox participant.",
+   "url": "https://ttm.ownera.io/",
+   "link": "/network/"
+  },
+  {
+   "date": "2026-11-06",
+   "kind": "network",
+   "title": "Five institutions from Ownera's partner logos",
+   "body": "ABN AMRO, Tokentus Investment AG, K3, TomNext and Future of Finance appear among the \"Trusted By\" logos on Ownera's home page. Listed as named associations; Ownera does not describe the relationships.",
+   "url": "https://www.ownera.io/",
+   "link": "/institutions/"
+  },
+  {
+   "date": "2026-11-06",
+   "kind": "network",
+   "title": "Tezos adapter archived; open-code updates",
+   "body": "Ownera archived its Tezos adapter repository on 1 Nov. Also noted on the developer guide: EVM adapter v0.29.0, swap and move instructions and EIP-712 handling in the Node.js skeleton, and collateral-terms v3 in the certificates spec.",
+   "url": "https://github.com/owneraio",
+   "link": "/developers/#code"
+  },
+  {
+   "date": "2026-11-06",
+   "kind": "site",
+   "title": "Corrections",
+   "body": "Store production count in the FAQ now 15 (it left out the Router License listing); the Open Collateral Network pilots are described as slated for September 2026, as Ownera has not announced their start; Polygon re-sourced to Ownera's Tokenized Treasury Manager page, and Base dropped as Ownera's site no longer names it; the authentication note now reflects that Ownera's reference uses apiKey in its own sample.",
+   "link": "/faq/"
+  },
+  {
    "date": "2026-10-13",
    "kind": "network",
    "title": "Utila partners with Ownera",
